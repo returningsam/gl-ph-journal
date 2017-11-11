@@ -1,5 +1,10 @@
 @import url('https://rsms.me/inter/inter-ui.css');
 
+:root {
+    --TITLE_UNIT_BLOCK_PX: 50px;
+    --TITLE_UNIT_KERN_PX:  calc(var(--TITLE_UNIT_BLOCK_PX) / 5);
+}
+
 html {
     height: 100%;
     width: 100%;
@@ -18,96 +23,81 @@ body {
     justify-content: space-between;
 }
 
-p {
-    padding: 0;
-    margin: 0;
-}
-
-.titleText {
+.title_cont {
     position: fixed;
-    font-size: 5rem;
-    transition: top 0.2s, left 0.2s;
+    width:  calc(calc(var(--TITLE_UNIT_BLOCK_PX) * 15) + calc(var(--TITLE_UNIT_KERN_PX) * 3));
+    height:      calc(var(--TITLE_UNIT_BLOCK_PX) * 6);
 }
 
-.titleTextButton {
-    position: fixed;
-    font-size: 5rem;
-    transition: top 0.2s, left 0.2s, color 0.2s;
+.title_unit {
+    position: absolute;
+    opacity: 1;
+    transition: opacity 1.5s ease-in-out, top 1.5s ease-in-out, left 1.5s ease-in-out, background-color 0.5s linear;
 }
 
-.titleTextButton:hover {
-    color: red;
-    transition: top 0.2s, left 0.2s, color 0.2s;
-    cursor: pointer;
-}
-
-.titleTextButton:active {
-    color: green;
-    cursor: pointer;
-}
-
-.titleTextButtonOn {
-    color: blue;
-    position: fixed;
-    font-size: 5rem;
-    transition: top 0.2s, left 0.2s;
-}
-
-.titleTextButtonOn:hover {
-    cursor: pointer;
-}
-
-.titleTextButtonOn:active {
-    color: green;
-    cursor: pointer;
-}
-
-.titleTextNoTrans {
-    position: fixed;
-    font-size: 5rem;
-}
-
-.initialPosDIG {
-    right: 50%;
-    bottom: 50%;
-}
-.initialPosSIG {
-    right: 50%;
-    top: 50%;
-}
-.initialPosITAL {
-    left: 50%;
-    bottom: 50%;
-}
-.initialPosNATURES {
-    left: 50%;
-    top: 50%;
-}
-
-.menuImg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    max-height: 15%;
-    max-width: 15%;
-}
-
-.menuImgHidden {
+.title_unit_hidden {
+    position: absolute;
     opacity: 0;
-    z-index: -1;
-    pointer-events: none;
+    transition: opacity 1.5s ease-in-out, top 1.5s ease-in-out, left 1.5s ease-in-out;
 }
 
-.menuButtonCanvas:hover {
-    cursor: pointer;
+.title_unit_box {
+    background-color: black;
+
+    width:  var(--TITLE_UNIT_BLOCK_PX);
+    height: var(--TITLE_UNIT_BLOCK_PX);
 }
 
-.menuButtonCanvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    margin: 0;
+.title_unit_right_semicircle {
+    border:      var(--TITLE_UNIT_BLOCK_PX) solid black;
+    border-left: none;
+
+    width:       var(--TITLE_UNIT_BLOCK_PX);
+    height: calc(var(--TITLE_UNIT_BLOCK_PX) * 2);
+
+    border-top-right-radius:    calc(var(--TITLE_UNIT_BLOCK_PX) * 2);
+    border-bottom-right-radius: calc(var(--TITLE_UNIT_BLOCK_PX) * 2);
+}
+
+.title_unit_bottom_semicircle {
+    border:     var(--TITLE_UNIT_BLOCK_PX) solid black;
+    border-top: none;
+
+    width:  calc(var(--TITLE_UNIT_BLOCK_PX) * 2);
+    height:      var(--TITLE_UNIT_BLOCK_PX);
+
+    border-bottom-right-radius: calc(var(--TITLE_UNIT_BLOCK_PX) * 2);
+    border-bottom-left-radius:  calc(var(--TITLE_UNIT_BLOCK_PX) * 2);
+}
+
+.title_unit_top_semicircle {
+    border:     var(--TITLE_UNIT_BLOCK_PX) solid black;
+    border-bottom: none;
+
+    width:  calc(var(--TITLE_UNIT_BLOCK_PX) * 2);
+    height:      var(--TITLE_UNIT_BLOCK_PX);
+
+    border-top-right-radius: calc(var(--TITLE_UNIT_BLOCK_PX) * 2);
+    border-top-left-radius:  calc(var(--TITLE_UNIT_BLOCK_PX) * 2);
+}
+
+.title_unit_bottom_left_semicircle {
+    border:     var(--TITLE_UNIT_BLOCK_PX) solid black;
+    border-top: none;
+    border-right: none;
+
+    width:  var(--TITLE_UNIT_BLOCK_PX);
+    height: var(--TITLE_UNIT_BLOCK_PX);
+
+    border-bottom-left-radius:  calc(var(--TITLE_UNIT_BLOCK_PX) * 2);
+}
+
+.title_loading_bar {
+    background-color: black;
+
+    left: calc(calc(var(--TITLE_UNIT_BLOCK_PX) * 4) + var(--TITLE_UNIT_KERN_PX));
+    top:  calc(var(--TITLE_UNIT_BLOCK_PX) * 3);
+
+    width:  calc(calc(var(--TITLE_UNIT_BLOCK_PX) * 4) + var(--TITLE_UNIT_KERN_PX));
+    height: var(--TITLE_UNIT_BLOCK_PX);
 }
