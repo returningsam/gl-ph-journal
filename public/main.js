@@ -224,7 +224,7 @@ function placeTitle() {
     document.getElementById('title_cont').appendChild(loadingBar);
 
     loadingBarProgress();
-    loadingBarInterval = setInterval(loadingBarProgress, 500);
+    loadingBarInterval = setInterval(loadingBarProgress, 700);
 
     setTimeout(showTitle, r_in_r(2000,4000));
 }
