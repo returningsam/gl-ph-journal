@@ -2,11 +2,46 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Digital Signatures</title>
+        <title>GL-PH</title>
+        <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,700" rel="stylesheet">
+        <!-- <link href="https://fonts.googleapis.com/css?family=Inconsolata:400,700" rel="stylesheet"> -->
         <link rel="stylesheet" href="style.css">
         <script src="main.js" charset="utf-8"></script>
     </head>
     <body>
-        <div id="title_cont" class="title_cont"></div>
+        <header>
+            <div class="title_header">
+                <p id="title_ch_0">G</p>
+                <p id="title_ch_1">L</p>
+                <p id="title_sp"  >-</p>
+                <p id="title_ch_2">P</p>
+                <p id="title_ch_3">H</p>
+            </div>
+            <div class="menu_header">
+                <div id="mb_cont" class="menu_button_cont">
+                    <p id="home_mb"   >-</p>
+                    <p id="about_mb"  >*</p>
+                    <p id="dig_lit_mb">!</p>
+                    <p id="submit_mb" >+</p>
+                    <p id="faq_mb"    >~</p>
+                </div>
+            </div>
+        </header>
+        <main>
+            <div id="section_scroll" class="section_cont">
+                <section id="home_sec" class="light"></section>
+                <section id="about_sec" class="dark"></section>
+                <section id="dig_lit_sec" class="light"></section>
+                <section id="submit_sec" class="dark submit_sec">
+                    <div id="drag_home" class="submit_cont submit_left"></div>
+                    <div class="submit_cont submit_right">
+                        <p id="drop" class="submit_text">SUBMIT</p>
+                    </div>
+                </section>
+                <section id="faq_sec" class="light"></section>
+                <p id="drag" class="submit_text grab">SUBMIT</p>
+            </div>
+        </main>
+        <div id="loading_overlay" class="loading_overlay"></div>
     </body>
 </html>

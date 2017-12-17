@@ -1,103 +1,231 @@
-@import url('https://rsms.me/inter/inter-ui.css');
-
-:root {
-    --TITLE_UNIT_BLOCK_PX: 50px;
-    --TITLE_UNIT_KERN_PX:  calc(var(--TITLE_UNIT_BLOCK_PX) / 5);
-}
-
-html {
+html, body {
+    width: 100%;
     height: 100%;
-    width: 100%;
+    max-height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: 'Roboto Mono', monospace;
+    /*font-family: 'Inconsolata', monospace;*/
+    font-weight: 700;
 }
 
-body {
-    font-family: 'Inter UI', sans-serif;
-    font-size: 4rem;
-    font-weight: bolder;
-    padding: 0;
+p {
     margin: 0;
+    padding: 0;
+}
+
+/******************************************************************************/
+/**************************** LOADING *****************************************/
+/******************************************************************************/
+
+.loading_overlay {
+    position: fixed;
+    height: 100%;
+    width:  100%;
+    background-color: white;
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
+    z-index: 4;
+}
+
+/******************************************************************************/
+/**************************** MENU/HEADER *************************************/
+/******************************************************************************/
+
+header {
+    position: fixed;
+    left: 0;
     width: 100%;
+    min-height: 100px;
+    height: 15%;
+    z-index: 5;
+    transition: top 1s ease-in-out;
+    pointer-events: none;
+}
+
+header p {
+    font-size: 3rem;
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
+    color: black;
+    transition: color 0.5s ease-in-out;
 }
 
-.title_cont {
-    position: fixed;
-    width:  calc(calc(var(--TITLE_UNIT_BLOCK_PX) * 15) + calc(var(--TITLE_UNIT_KERN_PX) * 3));
-    height:      calc(var(--TITLE_UNIT_BLOCK_PX) * 6);
-}
-
-.title_unit {
+.title_header {
     position: absolute;
-    opacity: 1;
-    transition: opacity 1.5s ease-in-out, top 1.5s ease-in-out, left 1.5s ease-in-out, background-color 0.7s linear;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
-.title_unit_hidden {
+
+.menu_header {
     position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.menu_button_cont {
     opacity: 0;
-    transition: opacity 1.5s ease-in-out, top 1.5s ease-in-out, left 1.5s ease-in-out;
+    width: 75%;
+    height: 100%;
+    transition: opacity 1s ease-in-out;
 }
 
-.title_unit_box {
-    background-color: black;
-
-    width:  var(--TITLE_UNIT_BLOCK_PX);
-    height: var(--TITLE_UNIT_BLOCK_PX);
+.menu_button_cont p {
+    color: black;
+    position: absolute;
+    transition: left 0.5s;
+    /* This keeps the button from being highlighted */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+    pointer-events: all;
 }
 
-.title_unit_right_semicircle {
-    border:      var(--TITLE_UNIT_BLOCK_PX) solid black;
-    border-left: none;
-
-    width:       var(--TITLE_UNIT_BLOCK_PX);
-    height: calc(var(--TITLE_UNIT_BLOCK_PX) * 2);
-
-    border-top-right-radius:    calc(var(--TITLE_UNIT_BLOCK_PX) * 2);
-    border-bottom-right-radius: calc(var(--TITLE_UNIT_BLOCK_PX) * 2);
+.menu_button_cont p:hover {
+    cursor: pointer;
 }
 
-.title_unit_bottom_semicircle {
-    border:     var(--TITLE_UNIT_BLOCK_PX) solid black;
-    border-top: none;
+/******************************************************************************/
+/**************************** MAIN ********************************************/
+/******************************************************************************/
 
-    width:  calc(var(--TITLE_UNIT_BLOCK_PX) * 2);
-    height:      var(--TITLE_UNIT_BLOCK_PX);
-
-    border-bottom-right-radius: calc(var(--TITLE_UNIT_BLOCK_PX) * 2);
-    border-bottom-left-radius:  calc(var(--TITLE_UNIT_BLOCK_PX) * 2);
+main {
+    position: fixed;
+    top: 0;
+    left: 0
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    overflow-y: scroll;
+    z-index: 0;
 }
 
-.title_unit_top_semicircle {
-    border:     var(--TITLE_UNIT_BLOCK_PX) solid black;
-    border-bottom: none;
-
-    width:  calc(var(--TITLE_UNIT_BLOCK_PX) * 2);
-    height:      var(--TITLE_UNIT_BLOCK_PX);
-
-    border-top-right-radius: calc(var(--TITLE_UNIT_BLOCK_PX) * 2);
-    border-top-left-radius:  calc(var(--TITLE_UNIT_BLOCK_PX) * 2);
+.section_cont {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
-.title_unit_bottom_left_semicircle {
-    border:     var(--TITLE_UNIT_BLOCK_PX) solid black;
-    border-top: none;
-    border-right: none;
-
-    width:  var(--TITLE_UNIT_BLOCK_PX);
-    height: var(--TITLE_UNIT_BLOCK_PX);
-
-    border-bottom-left-radius:  calc(var(--TITLE_UNIT_BLOCK_PX) * 2);
+section {
+    width: 100%;
+    /*border-bottom: 2px solid black;*/
 }
 
-.title_loading_bar {
-    background-color: black;
+section.dark {
+    background-color: rgba(191, 191, 191, 0.2);
+}
 
-    left: calc(calc(var(--TITLE_UNIT_BLOCK_PX) * 4) + var(--TITLE_UNIT_KERN_PX));
-    top:  calc(var(--TITLE_UNIT_BLOCK_PX) * 3);
+section.light {
+    background-color: white;
+}
 
-    width:  calc(calc(var(--TITLE_UNIT_BLOCK_PX) * 4) + var(--TITLE_UNIT_KERN_PX));
-    height: var(--TITLE_UNIT_BLOCK_PX);
+
+/******************************************************************************/
+/**************************** SUBMIT ******************************************/
+/******************************************************************************/
+
+.submit_sec {
+    display: flex;
+    flex-direction: row;
+}
+
+.submit_cont {
+    width: 50%;
+    height: 100%;
+}
+
+.submit_right {
+    background-color: blue;
+    -webkit-text-stroke: 1px white;
+    text-stroke: white black;
+    color: blue;
+}
+
+.submit_text {
+    font-size: 7rem;
+    position: absolute;
+    z-index: 5;
+    /* This keeps the button from being highlighted */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+.grab {
+    z-index: 100;
+    -webkit-text-stroke: 1px white;
+    text-stroke: white black;
+    color: black;
+}
+
+.active_submit {
+    z-index: 100;
+    color: white;
+    transition: color 0.5s, text-stroke 0.5s, -webkit-text-stroke 0.5s;
+}
+
+.active_submit:hover {
+    cursor: pointer;
+}
+
+.active_submit:before {
+    content: ".......................................";
+    color: rgba(0,0,0,0);
+    font-size: 1.5rem;
+    width: 100%;
+    position: absolute;
+    height: 100px;
+    bottom: -55px;
+    left: -5px;
+    overflow-x: hidden;
+    overflow-y: visible;
+    text-decoration: underline wavy red;
+}
+
+.grab:hover {
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+}
+
+.grab:active {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+}
+
+@keyframes dropAnim {
+    0%   {color: rgba(255,255,255,0);}
+    50%  {color: rgba(255,255,255,0.4);}
+    100% {color: rgba(255,255,255,0);}
+}
+
+.drop {
+    color: blue;
+    animation: dropAnim 1.5s infinite ease-in-out;
 }
