@@ -94,6 +94,7 @@ function initMenu() {
 
 function updateTitleColors() {
     var maxDist = 200;
+    var colorStep = 1;
     // UNCOMMENT TO FADE TITLE ON HOVER
     // for (var i = 0; i < 4; i++) {
     //     var titleCh = document.getElementById("title_ch_" + i);
@@ -111,7 +112,7 @@ function updateTitleColors() {
         var mult = 1-(dist / maxDist);
         var rgb = hexToRgb(buttonColors[Math.abs(i - activePage)]);
         for (var r = 0; r < rgb.length; r++) rgb[r] = (rgb[r] * mult).toFixed(0);
-        buttonCh.style.color = "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")";
+        buttonCh.style.color = "rgb(" + (Math.floor(rgb[0]/colorStep)*colorStep) + "," + (Math.floor(rgb[1]/colorStep)*colorStep) + "," + (Math.floor(rgb[2]/colorStep)*colorStep) + ")";
     }
 }
 
@@ -208,7 +209,10 @@ function finalizeSubmit() {
     drag.style.left = (window.innerWidth/2) - (drag.clientWidth/2) + "px";
     drop.style.left = (window.innerWidth/2) - (drop.clientWidth/2) + "px";
     document.getElementById("drag_home").style.backgroundColor = "blue";
-    document.getElementById("drag").addEventListener("click",openSubmitLink);
+    setTimeout(function () {
+        document.getElementById("drag").addEventListener("mousedown",openSubmitLink);
+    }, 10);
+
 }
 
 function getSubmitDist() {
@@ -292,7 +296,6 @@ function resizeUpdateSubmitTexts() {
             finalizeSubmit();
     }
     else finalizeSubmit();
-
 }
 
 function initSubmit() {

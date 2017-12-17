@@ -6,7 +6,7 @@ html, body {
     padding: 0;
     overflow: hidden;
     font-family: 'Roboto Mono', monospace;
-    /*font-family: 'Inconsolata', monospace;*/
+    /* font-family: 'Inconsolata', monospace; */
     font-weight: 700;
 }
 
@@ -35,7 +35,7 @@ p {
 
 header {
     position: fixed;
-    left: 0;
+    left: 1px;
     width: 100%;
     min-height: 100px;
     height: 15%;
