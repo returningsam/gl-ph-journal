@@ -39,7 +39,6 @@ function randChar() {
         n = r_in_r(33, 255);
         ch = String.fromCharCode(n);
     }
-    console.log(ch, n);
     return ch;
 }
 
@@ -142,7 +141,6 @@ function handlePageMouseMove(ev) {
 /******************************************************************************/
 
 function scrollToSection(sID) {
-    console.log(sID);
     var scrollEl = document.getElementById(sID + "_sec");
     scrollEl.scrollIntoView({behavior: "smooth",block: "end", inline: "nearest"});
 }
@@ -191,22 +189,26 @@ var updateSubmitMovePosInterval;
 var clickPointX;
 var clickPointY;
 
+var finalized = false;
+
+function openSubmitLink() {
+    window.open("https://www.lawctopus.com/wp-content/uploads/2017/10/submit-a-new-post.png","_self");
+    // submit link here ^
+}
+
 function finalizeSubmit() {
-    var el = document.getElementById("drag");
+    var drag = document.getElementById("drag");
+    var drop = document.getElementById("drop");
     document.getElementById("drag").removeEventListener("mousedown",submitMoveMouseDownHandler);
     document.getElementById("drag").removeEventListener("mouseup",submitMoveMouseUpHandler);
     if (updateSubmitMovePosInterval) clearInterval(updateSubmitMovePosInterval);
-    el.style.top  = document.getElementById('drop').style.top;
-    el.style.left = document.getElementById('drop').style.left;
-    document.getElementById('drag').className = "submit_text active_submit";
-    document.getElementById("drop").className = "submit_text";
-    document.getElementById("drag").addEventListener("mouseup",function () {
-        setTimeout(function () {
-            document.getElementById("drag").addEventListener("click",function () {
-                window.open("https://www.lawctopus.com/wp-content/uploads/2017/10/submit-a-new-post.png","_self");
-            });
-        }, 500);
-    });
+    drag.className = "submit_text active_submit";
+    drop.className = "submit_text";
+    drag.style.top  = drop.style.top;
+    drag.style.left = (window.innerWidth/2) - (drag.clientWidth/2) + "px";
+    drop.style.left = (window.innerWidth/2) - (drop.clientWidth/2) + "px";
+    document.getElementById("drag_home").style.backgroundColor = "blue";
+    document.getElementById("drag").addEventListener("click",openSubmitLink);
 }
 
 function getSubmitDist() {
@@ -225,7 +227,6 @@ function updateSubmitMovePos() {
     var curX = mouseX - clickPointX;
     var curY = mouseY - clickPointY
     var dist = getSubmitDist();
-    console.log(Math.pow(dist,0.00001));
     var maxJitter = Math.pow(Math.max(dist,0),0.3);
 
     var newTop  = Math.max(document.getElementById("submit_sec").offsetTop-37,Math.min(curY + r_in_r(-maxJitter,maxJitter),
@@ -234,14 +235,17 @@ function updateSubmitMovePos() {
                 window.innerWidth - drag.clientWidth));
     drag.style.top  = newTop  + "px";
     drag.style.left = newLeft + "px";
-    if (dist < 10) finalizeSubmit();
+    if (dist < 10) {
+        finalized = true;
+        finalizeSubmit();
+    }
 }
 
 function submitMoveMouseDownHandler(ev) {
     clickPointX = ev.clientX - ev.target.offsetLeft;
     clickPointY = ev.clientY - ev.target.offsetTop;
     document.getElementById("drop").className = "drop submit_text";
-    updateSubmitMovePosInterval = setInterval(updateSubmitMovePos, 5);
+    updateSubmitMovePosInterval = setInterval(updateSubmitMovePos, 10);
 }
 
 function submitMoveMouseUpHandler(ev) {
@@ -249,34 +253,53 @@ function submitMoveMouseUpHandler(ev) {
     if (updateSubmitMovePosInterval) clearInterval(updateSubmitMovePosInterval);
 }
 
+function resetDrag() {
+    var drag = document.getElementById("drag");
+    drag.addEventListener("mousedown",submitMoveMouseDownHandler);
+    drag.addEventListener("mouseup",submitMoveMouseUpHandler);
+    drag.addEventListener("mouseout",submitMoveMouseUpHandler);
+    drag.removeEventListener("click",openSubmitLink);
+    drag.className = "submit_text grab";
+    drag.style = null;
+    var pNode = document.getElementById("drag_home");
+    pNode.style = null;
+}
+
 function placeSubmits() {
+    var drag = document.getElementById("drag");
     var texts = document.getElementsByClassName("submit_text");
     var pNode = document.getElementById("drag_home");
     var tnum = 1;
-    console.log((pNode.offsetTop) + (sectionHeight/2) - (texts[tnum].clientHeight/2));
     texts[tnum].style.left = (window.innerWidth/4) - (texts[tnum].clientWidth/2) + "px";
     texts[tnum].style.top  = (pNode.offsetTop) + (sectionHeight/2) - (texts[tnum].clientHeight/2) + "px";
-    console.log(texts[tnum].style.top);
-    console.log(texts[tnum]);
-
     var tnum = 0;
     pNode = texts[tnum].parentNode;
     texts[tnum].style.left = (pNode.offsetLeft) + (window.innerWidth/4)  - (texts[tnum].clientWidth/2)  + "px";
     texts[tnum].style.top  = (pNode.offsetTop)  + (sectionHeight/2) - (texts[tnum].clientHeight/2) + "px";
 }
 
-// function resizeUpdateSubmitTexts() {
-//     var drag = document.getElementById("drag");
-//     var drop = document.getElementById("drop");
-//
-//     drag.
-// }
+var curWindowWidth;
+var curWindowHeight;
+
+function resizeUpdateSubmitTexts() {
+    var drag = document.getElementById("drag");
+    var drop = document.getElementById("drop");
+
+    if (!finalized) {
+        resetDrag();
+        placeSubmits();
+        if (window.innerWidth/window.innerHeight < 1.12)
+            finalizeSubmit();
+    }
+    else finalizeSubmit();
+
+}
 
 function initSubmit() {
+    resetDrag();
     placeSubmits();
-    document.getElementById("drag").addEventListener("mousedown",submitMoveMouseDownHandler);
-    document.getElementById("drag").addEventListener("mouseup",submitMoveMouseUpHandler);
-    document.getElementById("drag").addEventListener("mouseout",submitMoveMouseUpHandler);
+    if (window.innerWidth/window.innerHeight < 1.12)
+        finalizeSubmit();
 }
 
 /******************************************************************************/
@@ -344,7 +367,10 @@ var resizeTimeout;
 
 function resize() {
     if (resizeTimeout) clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(updateAllMenuButtons, 10);
+    resizeTimeout = setTimeout(function () {
+        updateAllMenuButtons();
+        resizeUpdateSubmitTexts();
+    }, 100);
 }
 
 window.onload = init;
