@@ -6,40 +6,78 @@
         <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,700" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:300,400,500,700,900" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Inconsolata:400,700" rel="stylesheet">
+        <link rel="stylesheet" href="responsive.min.css">
         <link rel="stylesheet" href="style.css">
         <script src="main.js" charset="utf-8"></script>
     </head>
     <body>
         <header>
             <div class="title_header">
-                <p id="title_ch_0">G</p>
-                <p id="title_ch_1">L</p>
-                <p id="title_sp"  >-</p>
-                <p id="title_ch_2">P</p>
-                <p id="title_ch_3">H</p>
+                <p id="title_ch_0" class="t_char">G</p>
+                <p id="title_ch_1" class="t_char">L</p>
+                <p id="title_sp"   class="t_char">-</p>
+                <p id="title_ch_2" class="t_char">P</p>
+                <p id="title_ch_3" class="t_char">H</p>
             </div>
             <div class="menu_header">
                 <div id="mb_cont" class="menu_button_cont">
-                    <p id="home_mb"   >-</p>
-                    <p id="about_mb"  >*</p>
-                    <p id="dig_lit_mb">!</p>
-                    <p id="submit_mb" >+</p>
-                    <p id="faq_mb"    >~</p>
+                    <p id="home_mb"    class="mb">-</p>
+                    <p id="about_mb"   class="mb">*</p>
+                    <p id="elit_mb"    class="mb">!</p>
+                    <p id="submit_mb"  class="mb">+</p>
+                    <p id="faq_mb"     class="mb">~</p>
                 </div>
             </div>
         </header>
         <main>
             <div id="section_scroll" class="section_cont">
-                <section id="home_sec" class="light"></section>
-                <section id="about_sec" class="dark"></section>
-                <section id="dig_lit_sec" class="light"></section>
+                <section id="home_sec"   class="light">
+                    <div id="ControlPanel">
+                        <div id="FontFamControl" class="row equal-height">
+                            <div class="control_label col-xs-5">
+                                <label for="">Heading Font:</label>
+                            </div>
+                            <div class="col-xs-7">
+                                <div id="FontButtons" class="btn-group equal-width">
+                                </div>
+                            </div>
+                        </div>
+                        <div id="FontCaseControl" class="row equal-height">
+                            <div class="control_label col-xs-5">
+                                <label for="">Title Capitalization:</label>
+                            </div>
+                            <div class="col-xs-7">
+                                <div id="CaseButtons" class="btn-group equal-width">
+                                    <button>UPPER</button>
+                                    <button>lower</button>
+                                    <button>RaNdOm</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="MenuGlyphControl" class="row equal-height"></div>
+                        <div id="MenuColorControl" class="row equal-height"></div>
+                        <div id="ColorStepControl" class="row equal-height">
+                            <div class="control_label col-xs-5">
+                                <label for="ColorStepSlide">Menu Button Color-Stepping:</label>
+                            </div>
+                            <div class="col-xs-7">
+                                <div class="row">
+                                    <label for="ColorStepSlide" id="ColorStepVal" class="col-xs-2 text-center"></label>
+                                    <input id="ColorStepSlide" class="col-xs-10" type="range" min="1" max="250" value="35"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section id="about_sec"  class="dark"></section>
+                <section id="elit_sec"   class="light"></section>
                 <section id="submit_sec" class="dark submit_sec">
                     <div id="drag_home" class="submit_cont submit_left"></div>
                     <div class="submit_cont submit_right">
                         <p id="drop" class="submit_text">SUBMIT</p>
                     </div>
                 </section>
-                <section id="faq_sec" class="light"></section>
+                <section id="faq_sec"    class="light"></section>
                 <p id="drag" class="submit_text grab">SUBMIT</p>
             </div>
         </main>

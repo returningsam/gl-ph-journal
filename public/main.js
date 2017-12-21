@@ -1,6 +1,32 @@
-const sectIDs      = ["home","about","dig_lit","submit","faq"];
+const sectIDs      = ["home","about","elit","submit","faq"]; // TODO deprecate
+var sections = [
+  { id: "home",
+    char: "-", color: "ff1f00",
+    getMB: function() { return document.getElementById( this.id + "_mb" ); },
+    getSec: function() { return document.getElementById( this.id + "_sec" ); }
+  },
+  { id: "about",
+    char: "*", color: "ff1f00",
+    getMB: function() { return document.getElementById( this.id + "_mb" ); },
+    getSec: function() { return document.getElementById( this.id + "_sec" ); }
+  },
+  { id: "elit",
+    char: "!", color: "ff1f00",
+    getMB: function() { return document.getElementById( this.id + "_mb" ); },
+    getSec: function() { return document.getElementById( this.id + "_sec" ); }
+  },
+  { id: "submit",
+    char: "+", color: "ff1f00",
+    getMB: function() { return document.getElementById( this.id + "_mb" ); },
+    getSec: function() { return document.getElementById( this.id + "_sec" ); }
+  },
+  { id: "faq",
+    char: "~", color: "ff1f00",
+    getMB: function() { return document.getElementById( this.id + "_mb" ); },
+    getSec: function() { return document.getElementById( this.id + "_sec" ); }
+  },
+];
 // const buttonColors = [ "F0433A", "C9283E", "820333", "540032", "2E112D"];
-const buttonColors = [ "ff1f00", "ff1f00", "ff1f00", "ff1f00", "ff1f00"];
 var activePage = 0;
 var menuCharWidth;
 var updateScroll = true;
@@ -49,26 +75,99 @@ function getDist(x1,y1,x2,y2) {
     return Math.sqrt((a*a)+(b*b));
 }
 
+function getSectIndByKeyVal( key, val ) {
+    for (var i = 0; i < sections.length; i++) {
+        if (sections[i][key] === val) return i;
+    }
+    return -1;
+}
+
+// get the index of a section in `sections` by its ID
+function getSectIndByID( sID ) {
+    return getSectIndByKeyVal( "id", sID );
+}
+
+function mouseInEle(ele) {
+    var x1, x2, y1, y2;
+    x1 = ele.offsetLeft; x2 = x1 + ele.clientWidth;
+    y1 = ele.offsetTop;  y2 = y1 + ele.clientHeight;
+    if (mouseX >= x1 && mouseX <= x2) {
+        if (mouseY >= y1 && mouseY <= y2) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/******************************************************************************/
+/************************** CONTROL PANEL *************************************/
+/******************************************************************************/
+
+var fonts = ["Inconsolata", "Roboto Mono"];
+
+function setFont( font ) {
+    document.getElementsByTagName( "body" )[0].style["font-family"] = font;
+    initMenu();
+}
+
+function initFontFamControl() {
+    var fontbutts = document.getElementById( "FontButtons" );
+    for (var i = 0; i < fonts.length; i++) {
+      fontbutts.innerHTML += "<button onclick=\"setFont('" + fonts[i] + "')\">" + fonts[i] + "</button>";
+    }
+}
+
+function initFontCaseControl() {
+    
+}
+
+function initMenuGlyphControl() {
+
+}
+
+function initMenuColorControl() {
+
+}
+
+function initColorStepControl() {
+    var stepSlide = document.getElementById( "ColorStepSlide" );
+    var stepVal = document.getElementById( "ColorStepVal" );
+    stepVal.innerHTML = stepSlide.value;
+    stepSlide.oninput = function() {
+        stepVal.innerHTML = stepSlide.value;
+        tColorStep = stepSlide.value;
+    };
+}
+
+function initControlPanel() {
+    initFontFamControl();
+    initFontCaseControl();
+    initMenuGlyphControl();
+    initMenuColorControl();
+    initColorStepControl();
+}
+
 /******************************************************************************/
 /******************************* MENU *****************************************/
 /******************************************************************************/
 
 function updateMenuButtonPos(sID) {
-    var el = document.getElementById(sID + "_mb");
-    if (sectIDs.indexOf(sID) < activePage) {       // left
-        el.style.left = ((sectIDs.indexOf(sID) * menuCharWidth) + el.parentElement.offsetLeft) + "px";
+    var idx = getSectIndByID(sID);
+    var el  = sections[idx].getMB();
+    if ( idx < activePage ) {       // left
+        el.style.left = ((idx * menuCharWidth) + el.parentElement.offsetLeft) + "px";
     }
-    else if (sectIDs.indexOf(sID) == activePage) { // center
+    else if ( idx === activePage ) { // center
         el.style.left = (((el.parentElement.clientWidth / 2) - (menuCharWidth/2)) + el.parentElement.offsetLeft) + "px";
     }
-    else {                                         // right
-        el.style.left = ((el.parentElement.clientWidth - (((sectIDs.length)-sectIDs.indexOf(sID)) * menuCharWidth)) + el.parentElement.offsetLeft) + "px";
+    else {                           // right
+        el.style.left = ((el.parentElement.clientWidth - (((sections.length)-idx) * menuCharWidth)) + el.parentElement.offsetLeft) + "px";
     }
 }
 
 function updateAllMenuButtons() {
-    for (var i = 0; i < sectIDs.length; i++) {
-        updateMenuButtonPos(sectIDs[i]);
+    for (var i = 0; i < sections.length; i++) {
+        updateMenuButtonPos(sections[i].id);
     }
 }
 
@@ -76,7 +175,7 @@ function menuButtonClickHandler(ev) {
     updateScroll = false;
     var sID = ev.target.id.replace("_mb","");
     scrollToSection(sID);
-    activePage = sectIDs.indexOf(sID);
+    activePage = getSectIndByID(sID);
     updateAllMenuButtons();
 
     setTimeout(function () {
@@ -87,14 +186,15 @@ function menuButtonClickHandler(ev) {
 function initMenu() {
     menuCharWidth = document.getElementById("home_mb").clientWidth;
     updateAllMenuButtons();
-    for (var i = 0; i < sectIDs.length; i++) {
-        document.getElementById(sectIDs[i] + "_mb").addEventListener("click",menuButtonClickHandler);
+    for (var i = 0; i < sections.length; i++) {
+        sections[i].getMB().addEventListener("click",menuButtonClickHandler);
     }
 }
 
+var tColorMaxDist = 200;
+var tColorStep = 35;
+
 function updateTitleColors() {
-    var maxDist = 200;
-    var colorStep = 1;
     // UNCOMMENT TO FADE TITLE ON HOVER
     // for (var i = 0; i < 4; i++) {
     //     var titleCh = document.getElementById("title_ch_" + i);
@@ -104,16 +204,35 @@ function updateTitleColors() {
     //     titleCh.style.opacity = ((dist / maxDist)-0.2).toFixed(2);
     // }
     // ////////////////////////////////
-    for (var i = 0; i < sectIDs.length; i++) {
-        var buttonCh = document.getElementById(sectIDs[i] + "_mb");
+    for (var i = 0; i < sections.length; i++) {
+        var buttonCh = sections[i].getMB();
+        // x-pos of center of element
         var elX = buttonCh.offsetLeft + (buttonCh.clientWidth/2);
+        // y-pos of center of element
         var elY = buttonCh.offsetTop  + (buttonCh.clientHeight/2);
+        // distance from mouse to element
         var dist = getDist(mouseX,mouseY,elX,elY);
-        var mult = 1-(dist / maxDist);
-        var rgb = hexToRgb(buttonColors[Math.abs(i - activePage)]);
-        for (var r = 0; r < rgb.length; r++) rgb[r] = (rgb[r] * mult).toFixed(0);
-        buttonCh.style.color = "rgb(" + (Math.floor(rgb[0]/colorStep)*colorStep) + "," + (Math.floor(rgb[1]/colorStep)*colorStep) + "," + (Math.floor(rgb[2]/colorStep)*colorStep) + ")";
+        // multiplier for color intensity
+        var mult = 1-(dist / tColorMaxDist);
+        // do not step-calculate if the mouse is in the button
+        // in this case, the element should be full-intensity
+        var step = mouseInEle( buttonCh ) ? 1 : tColorStep;
+        // set the button's color based on these factors
+        buttonCh.style.color = calcButtonColor(sections[i].color, mult, step);
     }
+}
+
+function calcButtonColor( hex, mult, step ) {
+    // var rgb = hexToRgb(buttonColors[Math.abs(i - activePage)]);
+    var rgb = hexToRgb( hex );
+    // multiply the rgb vals by intensity multiplier
+    for (var i = 0; i < rgb.length; i++) rgb[i] = (rgb[i] * mult).toFixed(0);
+
+    var res = "rgb(";
+    res += (Math.floor(rgb[0]/step)*step) + ","; // determine the R-val step
+    res += (Math.floor(rgb[1]/step)*step) + ","; // determine the G-val step
+    res += (Math.floor(rgb[2]/step)*step) + ")"; // determine the B-val step
+    return res;
 }
 
 /******************************************************************************/
@@ -156,24 +275,24 @@ function isScrolledIntoView(el) {
 function sectionScrollHandler(ev) {
     if (!updateScroll) return;
     var cont = ev.target;
-    var sections = cont.getElementsByTagName("section");
+    var sects = cont.getElementsByTagName("section");
     var i;
-    for (i = sections.length-1; i >= 0; i--) {
-        if (isScrolledIntoView(sections[i])) {
+    for (i = sects.length-1; i >= 0; i--) {
+        if (isScrolledIntoView(sects[i])) {
             break;
         }
     }
-    activePage = sectIDs.indexOf(sections[i].id.replace("_sec",""));
+    activePage = sectIDs.indexOf(sects[i].id.replace("_sec",""));
     updateAllMenuButtons();
 }
 
 function fixSectionHeights() {
     document.getElementsByTagName('main')[0].style.maxHeight = window.innerHeight + "px";
-    var sections = document.getElementsByTagName("section");
+    var sects = document.getElementsByTagName("section");
     sectionHeight = window.innerHeight*(17/20);
-    for (var i = 0; i < sections.length; i++) {
-        sections[i].style.minHeight = sectionHeight + "px";
-        sections[i].style.height    = sectionHeight + "px";
+    for (var i = 0; i < sects.length; i++) {
+        sects[i].style.minHeight = sectionHeight + "px";
+        sects[i].style.height    = sectionHeight + "px";
     }
 }
 
@@ -282,9 +401,6 @@ function placeSubmits() {
     texts[tnum].style.top  = (pNode.offsetTop)  + (sectionHeight/2) - (texts[tnum].clientHeight/2) + "px";
 }
 
-var curWindowWidth;
-var curWindowHeight;
-
 function resizeUpdateSubmitTexts() {
     var drag = document.getElementById("drag");
     var drop = document.getElementById("drop");
@@ -310,10 +426,11 @@ function initSubmit() {
 /******************************************************************************/
 
 var loadingInterval;
+var loadStepMs = 100;
 
 // var loadChs = "-+×*~.,\\|".split("");
 var loadChs = "\\|/-".split("");
-var curLoadCh = 0;
+// var curLoadCh = 0;
 
 function loadStep() {
     // var loadEl = document.getElementById('title_sp');
@@ -324,15 +441,19 @@ function loadStep() {
     // loadEl.innerHTML = randChar();
 
     var loadEl = document.getElementById('title_sp');
-    loadEl.innerHTML = loadChs[curLoadCh];
-    curLoadCh++;
-    if (curLoadCh > loadChs.length-1) curLoadCh = 0;
+    // loadEl.innerHTML = loadChs[curLoadCh];
+    // curLoadCh++;
+    // if (curLoadCh > loadChs.length-1) curLoadCh = 0;
+
+    // TODO more elegant approach (imo)
+    loadEl.innerHTML = loadChs[0];
+    loadChs.push( loadChs.shift() );
 }
 
 function startLoad() {
     var headerEl = document.getElementsByTagName("header")[0];
     headerEl.style.top = (window.innerHeight/2) - (headerEl.clientHeight/2) + "px";
-    loadingInterval = setInterval(loadStep, 100);
+    loadingInterval = setInterval(loadStep, loadStepMs);
 }
 
 function endLoad() {
@@ -347,7 +468,7 @@ function endLoad() {
             document.getElementById("mb_cont").style.opacity = 1;
             document.getElementById('loading_overlay').style.display = "none";
             setTimeout(function () {
-                document.getElementById('title_sp').innerHTML = "&nbsp;";
+              document.getElementById('title_sp').innerHTML = "&nbsp;";
             }, 1000);
         }, 1100);
     }, 200);
@@ -364,6 +485,7 @@ function init() {
     initSubmit();
     // setTimeout(endLoad, r_in_r(1000,2000));
     endLoad();
+    initControlPanel();
 }
 
 var resizeTimeout;

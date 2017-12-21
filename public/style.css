@@ -5,8 +5,8 @@ html, body {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    font-family: 'Roboto Mono', monospace;
-    /* font-family: 'Inconsolata', monospace; */
+    /*font-family: 'Roboto Mono', monospace;*/
+    font-family: 'Inconsolata', monospace;
     font-weight: 700;
 }
 
@@ -139,6 +139,36 @@ section.light {
     background-color: white;
 }
 
+
+/******************************************************************************/
+/***************************** HOME *******************************************/
+/******************************************************************************/
+
+#home_sec {
+  padding: 10em;
+  font-size: 1.5em;
+}
+
+.control_label {
+  text-align: right;
+  text-decoration: underline;
+}
+
+#FontButtons {
+  padding-left: 10%;
+}
+
+#CaseButtons {
+  padding-left: 20%;
+}
+
+#ColorStepVal {
+  padding: 0 0.2em;
+}
+
+.row {
+  /*border: 1px solid black;*/
+}
 
 /******************************************************************************/
 /**************************** SUBMIT ******************************************/
