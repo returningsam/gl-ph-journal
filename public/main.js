@@ -1,6 +1,6 @@
-const sectIDs      = ["home","about","dig_lit","submit","faq"];
+const sectIDs      = [ "home", "about", "dig_lit", "submit", "faq" ];
 // const buttonColors = [ "F0433A", "C9283E", "820333", "540032", "2E112D"];
-const buttonColors = [ "ff1f00", "ff1f00", "ff1f00", "ff1f00", "ff1f00"];
+const buttonColors = [ "ff1f00", "ff1f00", "ff1f00", "ff1f00", "ff1f00" ];
 var activePage = 0;
 var menuCharWidth;
 var updateScroll = true;
@@ -40,13 +40,6 @@ function randChar() {
         ch = String.fromCharCode(n);
     }
     return ch;
-}
-
-function getDist(x1,y1,x2,y2) {
-    var a = x1 - x2
-    var b = y1 - y2
-
-    return Math.sqrt((a*a)+(b*b));
 }
 
 /******************************************************************************/
