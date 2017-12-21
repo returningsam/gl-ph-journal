@@ -325,6 +325,7 @@ function loadStep() {
 function startLoad() {
     var headerEl = document.getElementsByTagName("header")[0];
     headerEl.style.top = (window.innerHeight/2) - (headerEl.clientHeight/2) + "px";
+    // makes a new loading-char every 100ms
     loadingInterval = setInterval(loadStep, 100);
 }
 
@@ -337,7 +338,13 @@ function endLoad() {
         headerEl.style.top = 0;
         document.getElementById('loading_overlay').style.opacity = 0;
         setTimeout(function () {
+            /*
+              TODO this pairing work better? in chromium and vivaldi, there is
+              a visible shift in length b/w the hyphen lengths
+            */
+            // make the menu buttons visible
             document.getElementById("mb_cont").style.opacity = 1;
+            // make the loading overlay (specifically, the hyphen) invisible
             document.getElementById('loading_overlay').style.display = "none";
             setTimeout(function () {
                 document.getElementById('title_sp').innerHTML = "&nbsp;";
