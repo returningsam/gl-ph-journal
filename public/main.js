@@ -1,30 +1,30 @@
 const sectIDs      = ["home","about","elit","submit","faq"]; // TODO deprecate
 var sections = [
-  { id: "home",
-    char: "-", color: "ff1f00",
-    getMB: function() { return document.getElementById( this.id + "_mb" ); },
-    getSec: function() { return document.getElementById( this.id + "_sec" ); }
-  },
-  { id: "about",
-    char: "*", color: "ff1f00",
-    getMB: function() { return document.getElementById( this.id + "_mb" ); },
-    getSec: function() { return document.getElementById( this.id + "_sec" ); }
-  },
-  { id: "elit",
-    char: "!", color: "ff1f00",
-    getMB: function() { return document.getElementById( this.id + "_mb" ); },
-    getSec: function() { return document.getElementById( this.id + "_sec" ); }
-  },
-  { id: "submit",
-    char: "+", color: "ff1f00",
-    getMB: function() { return document.getElementById( this.id + "_mb" ); },
-    getSec: function() { return document.getElementById( this.id + "_sec" ); }
-  },
-  { id: "faq",
-    char: "~", color: "ff1f00",
-    getMB: function() { return document.getElementById( this.id + "_mb" ); },
-    getSec: function() { return document.getElementById( this.id + "_sec" ); }
-  },
+    {   id: "home",
+        char: "-", color: "ff1f00",
+        getMB: function() { return document.getElementById( this.id + "_mb" ); },
+        getSec: function() { return document.getElementById( this.id + "_sec" ); }
+    },
+    {   id: "about",
+        char: "*", color: "ff1f00",
+        getMB: function() { return document.getElementById( this.id + "_mb" ); },
+        getSec: function() { return document.getElementById( this.id + "_sec" ); }
+    },
+    {   id: "elit",
+        char: "!", color: "ff1f00",
+        getMB: function() { return document.getElementById( this.id + "_mb" ); },
+        getSec: function() { return document.getElementById( this.id + "_sec" ); }
+    },
+    {   id: "submit",
+        char: "+", color: "ff1f00",
+        getMB: function() { return document.getElementById( this.id + "_mb" ); },
+        getSec: function() { return document.getElementById( this.id + "_sec" ); }
+    },
+    {   id: "faq",
+        char: "~", color: "ff1f00",
+        getMB: function() { return document.getElementById( this.id + "_mb" ); },
+        getSec: function() { return document.getElementById( this.id + "_sec" ); }
+    },
 ];
 // const buttonColors = [ "F0433A", "C9283E", "820333", "540032", "2E112D"];
 var activePage = 0;
@@ -87,6 +87,13 @@ function getSectIndByID( sID ) {
     return getSectIndByKeyVal( "id", sID );
 }
 
+function getSectByID( sID ) {
+    for (var i = 0; i < sections.length; i++) {
+        if (sections[i].id === sID) return sections[i];
+    }
+    return null;
+}
+
 function mouseInEle(ele) {
     var x1, x2, y1, y2;
     x1 = ele.offsetLeft; x2 = x1 + ele.clientWidth;
@@ -103,6 +110,8 @@ function mouseInEle(ele) {
 /************************** CONTROL PANEL *************************************/
 /******************************************************************************/
 
+/* FONT CONTROL */
+
 var fonts = ["Inconsolata", "Roboto Mono"];
 
 function setFont( font ) {
@@ -113,21 +122,101 @@ function setFont( font ) {
 function initFontFamControl() {
     var fontbutts = document.getElementById( "FontButtons" );
     for (var i = 0; i < fonts.length; i++) {
-      fontbutts.innerHTML += "<button onclick=\"setFont('" + fonts[i] + "')\">" + fonts[i] + "</button>";
+        fontbutts.innerHTML += "<button onclick=\"setFont('" + fonts[i] + "')\">" + fonts[i] + "</button>";
+    }
+}
+
+/* CASE CONTROL */
+
+function setTitleCase( case_type ) {
+    titleChars = document.getElementsByClassName( "t_char" );
+    switch ( case_type ) {
+        case "lower":
+            for (var i = 0; i < titleChars.length; i++) {
+                var ch = titleChars[i].innerHTML;
+                titleChars[i].innerHTML = ch.toLowerCase();
+            }
+            break;
+        case "upper":
+            for (var i = 0; i < titleChars.length; i++) {
+                var ch = titleChars[i].innerHTML;
+                titleChars[i].innerHTML = ch.toUpperCase();
+            }
+            break;
+        case "random":
+            for (var i = 0; i < titleChars.length; i++) {
+                var ch = titleChars[i].innerHTML;
+                titleChars[i].innerHTML = Math.round( Math.random() ) ? ch.toUpperCase() : ch.toLowerCase() ;
+            }
+            break;
     }
 }
 
 function initFontCaseControl() {
-    
+    var casebutts = document.getElementById( "CaseButtons" ).children;
+    for (var i = 0; i < casebutts.length; i++) {
+        casebutts[i].onclick = function() { setTitleCase( this.dataset.case ); };
+    }
 }
+
+/* GLYPH PICKING */
 
 function initMenuGlyphControl() {
 
 }
 
-function initMenuColorControl() {
+/* COLOR PICKING */
 
+function colorControlStyle() {
+    var elist = document.querySelectorAll( ".picker_preview" );
+    var e;
+    for (var i = 0; i < elist.length; i++) {
+        e = elist[i];
+        e.style["background-color"] = mouseInEle( e ) ? "rgba(191, 191, 191, 0.8)" : "rgba(191, 191, 191, 0.2)";
+    }
 }
+
+// builds an HTML string for a color-picker div corresponding to a section
+function buildColorPicker( sect ) {
+    var picker = "";
+    picker += "<div class=\"picker_div\" id=\"" + sect.id + "_picker\">";
+    picker += "<button class=\"picker_preview\">" + sect.char + "</button>";
+    picker += "<input ";
+    picker +=   "type=\"color\" ";
+    picker +=   "value=\"#" + sect.color + "\" ";
+    picker +=   "data-sect=\"" + sect.id + "\" ";
+    picker +=   "oninput=\"updateGlyphColor('" + sect.id + "')\">";
+    picker += "</input>";
+    picker += "</div>"
+    return picker;
+}
+
+function updateGlyphColor( sID ) {
+    var sect = getSectByID( sID );
+    var picker = document.querySelector( "#" + sect.id + "_picker > input" );
+    var preview = document.querySelector( "#" + sect.id + "_picker > button" );
+    sect.color = picker.value;
+    preview.style.color = sect.color;
+}
+
+function initMenuColorControl() {
+    var mbColorPickers = document.getElementById( "MBColorPickers" );
+    var sect, picker, preview;
+    for (var i = 0; i < sections.length; i++) {
+        sect = sections[i];
+        // add the color picker div to the color picker collection
+        mbColorPickers.innerHTML += buildColorPicker( sect );
+        picker = document.querySelector( "#" + sect.id + "_picker > input" );
+        preview = document.querySelector( "#" + sect.id + "_picker > button" );
+        // match the widths of the elements so the
+        // invisible color picker is over the preview char
+        picker.style.width = preview.clientWidth + "px";
+        preview.parentNode.style.height = preview.clientHeight + "px";
+        updateGlyphColor( sect.id );
+    }
+}
+
+/* COLOR-STEP CONTROL */
 
 function initColorStepControl() {
     var stepSlide = document.getElementById( "ColorStepSlide" );
@@ -246,6 +335,7 @@ var checkMousePosInterval;
 
 function checkMousePos() {
     updateTitleColors();
+    colorControlStyle();
 }
 
 function handlePageMouseMove(ev) {

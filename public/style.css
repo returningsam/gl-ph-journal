@@ -144,9 +144,14 @@ section.light {
 /***************************** HOME *******************************************/
 /******************************************************************************/
 
+/******************************************************************************/
+/*************************** CONTROL PANEL ************************************/
+/******************************************************************************/
+
 #home_sec {
-  padding: 10em;
+  padding: 6em;
   font-size: 1.5em;
+  max-width: 80%;
 }
 
 .control_label {
@@ -154,20 +159,36 @@ section.light {
   text-decoration: underline;
 }
 
-#FontButtons {
-  padding-left: 10%;
+.control_options {
+  padding-left: 1em;
 }
 
-#CaseButtons {
-  padding-left: 20%;
+button {
+  background-color: rgba(191, 191, 191, 0.2);
 }
 
-#ColorStepVal {
-  padding: 0 0.2em;
+button:hover {
+  background-color: rgba(191, 191, 191, 0.8);
 }
 
-.row {
-  /*border: 1px solid black;*/
+.picker_div {
+  text-align: center;
+}
+
+.picker_preview {
+  display: inline-block;
+  position: absolute;
+  padding: 0 1em;
+  border: 1px solid darkgray;
+  background-color: rgba(191, 191, 191, 0.2);
+}
+
+.picker_div > input[type="color"] {
+  cursor: pointer;
+  max-width: 100%;
+  opacity: 0;
+  display: inline-block;
+  position: absolute;
 }
 
 /******************************************************************************/
