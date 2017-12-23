@@ -176,11 +176,7 @@ button:hover {
 }
 
 .ginput_div {
-
-}
-
-.picker_div {
-  text-align: center;
+  padding: 0 1em;
 }
 
 .picker_preview {
