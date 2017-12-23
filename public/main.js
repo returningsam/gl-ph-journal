@@ -161,8 +161,38 @@ function initFontCaseControl() {
 
 /* GLYPH PICKING */
 
-function initMenuGlyphControl() {
+function updateGlyph( sID, char ) {
+    console.log( sID + " -> " + char );
+    var sect = getSectByID( sID );
+    sect.char = char;
+    sect.getMB().innerHTML = char;
+}
 
+function buildGlyphInput( sect ) {
+    var input = "";
+    input += "<div class=\"ginput_div\" id=\"" + sect.id + "_ginput\">";
+    input += "<input ";
+    input +=   "type=\"text\" ";
+    input +=   "value=\"" + sect.char + "\" ";
+    input +=   "maxlength=\"" + 1 + "\" ";
+    input +=   "data-sect=\"" + sect.id + "\" ";
+    input +=   "oninput=\"updateGlyph('" + sect.id + "', this.value)\">";
+    input += "</input>";
+    input += "</div>"
+    return input;
+}
+
+function initMenuGlyphControl() {
+    var mbGlyphPickers = document.getElementById( "MBGlyphPickers" );
+    var sect, input;
+    for (var i = 0; i < sections.length; i++) {
+        sect = sections[i];
+        // add the color picker div to the color picker collection
+        mbGlyphPickers.innerHTML += buildGlyphInput( sect );
+        mbGlyphPickers.lastChild.lastChild.style.width = menuCharWidth + "px";
+        // preview.parentNode.style.height = preview.clientHeight + "px";
+        // updateGlyphColor( sect.id );
+    }
 }
 
 /* COLOR PICKING */
@@ -243,6 +273,7 @@ function initControlPanel() {
 function updateMenuButtonPos(sID) {
     var idx = getSectIndByID(sID);
     var el  = sections[idx].getMB();
+    el.innerHTML = sections[idx].char;
     if ( idx < activePage ) {       // left
         el.style.left = ((idx * menuCharWidth) + el.parentElement.offsetLeft) + "px";
     }

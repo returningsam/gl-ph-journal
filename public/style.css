@@ -171,6 +171,14 @@ button:hover {
   background-color: rgba(191, 191, 191, 0.8);
 }
 
+#CaseButtons > button, #FontButtons > button {
+  margin: 0 0.5em;
+}
+
+.ginput_div {
+
+}
+
 .picker_div {
   text-align: center;
 }
@@ -183,7 +191,7 @@ button:hover {
   background-color: rgba(191, 191, 191, 0.2);
 }
 
-.picker_div > input[type="color"] {
+.picker_div > input {
   cursor: pointer;
   max-width: 100%;
   opacity: 0;
