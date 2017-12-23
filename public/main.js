@@ -190,8 +190,6 @@ function initMenuGlyphControl() {
         // add the color picker div to the color picker collection
         mbGlyphPickers.innerHTML += buildGlyphInput( sect );
         mbGlyphPickers.lastChild.lastChild.style.width = menuCharWidth + "px";
-        // preview.parentNode.style.height = preview.clientHeight + "px";
-        // updateGlyphColor( sect.id );
     }
 }
 
