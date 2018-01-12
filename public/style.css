@@ -139,6 +139,53 @@ section.light {
     background-color: white;
 }
 
+/******************************************************************************/
+/**************************** ABOUT GL-PH *************************************/
+/******************************************************************************/
+
+.about_sec {
+}
+
+.about_sec_title {
+    width: calc(100% - 60px);
+    margin: 0 30px;
+    /* height set by js */
+    font-size: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+
+.about_input_cont {
+    width: 100%;
+    /* height set by js */
+}
+
+textarea {
+    width: calc(100% - 60px);
+    margin: 0 30px;
+    /* margin: 0 30px; */
+    height: 100%;
+    font-size: 1rem;
+    border: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    background-color: rgba(0,0,0,0);
+    resize: none;
+}
+
+.about_copy {
+    display: none;
+    height: 100%;
+    width: 100%;
+}
+
 
 /******************************************************************************/
 /**************************** SUBMIT ******************************************/
@@ -159,6 +206,23 @@ section.light {
     -webkit-text-stroke: 1px white;
     text-stroke: white black;
     color: blue;
+}
+
+.submit_left {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 0 40px;
+}
+
+.submit_left p {
+    height: 100%;
+    display: none;
+    color: red;
+    font-size: 2rem;
+    flex-direction: column;
+    justify-content: center;
+    text-align: justify;
 }
 
 .submit_text {
@@ -227,5 +291,5 @@ section.light {
 
 .drop {
     color: blue;
-    animation: dropAnim 1.5s infinite ease-in-out;
+    animation: dropAnim 0.5s infinite ease-in-out;
 }

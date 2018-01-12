@@ -183,6 +183,20 @@ function initSections() {
 }
 
 /******************************************************************************/
+/******************************* ABOUT GL-PH SECTION **************************/
+/******************************************************************************/
+
+function setHeights() {
+    document.getElementById("about_sec_title").style.height = (window.innerHeight - sectionHeight) + "px";
+    var aboutIntput = document.getElementById("about_input");
+    aboutIntput.parentNode.style.height = (sectionHeight - (window.innerHeight - sectionHeight)) + "px";
+}
+
+function initAboutGLPH() {
+    setHeights();
+}
+
+/******************************************************************************/
 /******************************* SUBMIT SECTION *******************************/
 /******************************************************************************/
 
@@ -200,15 +214,16 @@ function openSubmitLink() {
 function finalizeSubmit() {
     var drag = document.getElementById("drag");
     var drop = document.getElementById("drop");
-    document.getElementById("drag").removeEventListener("mousedown",submitMoveMouseDownHandler);
-    document.getElementById("drag").removeEventListener("mouseup",submitMoveMouseUpHandler);
+    drag.removeEventListener("mousedown",submitMoveMouseDownHandler);
+    drag.removeEventListener("mouseup",submitMoveMouseUpHandler);
+    drag.removeEventListener("mouseout",submitMoveMouseUpHandler);
     if (updateSubmitMovePosInterval) clearInterval(updateSubmitMovePosInterval);
     drag.className = "submit_text active_submit";
     drop.className = "submit_text";
     drag.style.top  = drop.style.top;
-    drag.style.left = (window.innerWidth/2) - (drag.clientWidth/2) + "px";
-    drop.style.left = (window.innerWidth/2) - (drop.clientWidth/2) + "px";
-    document.getElementById("drag_home").style.backgroundColor = "blue";
+    drag.style.left = drop.style.left;
+    var thanksText = document.getElementById("thanks_text");
+    thanksText.style.display = "flex";
     setTimeout(function () {
         document.getElementById("drag").addEventListener("mousedown",openSubmitLink);
     }, 10);
@@ -254,6 +269,7 @@ function submitMoveMouseDownHandler(ev) {
 
 function submitMoveMouseUpHandler(ev) {
     document.getElementById("drop").className = "submit_text";
+    placeSubmits();
     if (updateSubmitMovePosInterval) clearInterval(updateSubmitMovePosInterval);
 }
 
@@ -362,6 +378,7 @@ function init() {
     initMenu();
     initSections();
     initSubmit();
+    initAboutGLPH();
     // setTimeout(endLoad, r_in_r(1000,2000));
     endLoad();
 }
