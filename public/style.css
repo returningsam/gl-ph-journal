@@ -52,6 +52,7 @@ header p {
     justify-content: center;
     color: black;
     transition: color 0.5s ease-in-out;
+    text-align: left;
 }
 
 .title_header {
@@ -70,18 +71,20 @@ header p {
 .menu_header {
     position: absolute;
     height: 100%;
-    width: 100%;
+    width: calc(100% - 120px);
+    padding: 0 60px;
     top: 0;
     left: 0;
     z-index: 2;
     display: flex;
     flex-direction: row;
     justify-content: center;
+
 }
 
 .menu_button_cont {
     opacity: 0;
-    width: 75%;
+    width: 100%;
     height: 100%;
     transition: opacity 1s ease-in-out;
 }
@@ -140,44 +143,84 @@ section.light {
 }
 
 /******************************************************************************/
+/**************************** HOME SECTION ************************************/
+/******************************************************************************/
+
+.home_sec {
+    position: relative;
+    padding: 0;
+}
+
+.home_sec canvas {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    z-index: 0;
+}
+
+/******************************************************************************/
 /**************************** ABOUT GL-PH *************************************/
 /******************************************************************************/
 
 .about_sec {
+    width: calc(100% - 120px);
+    padding: 0 60px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .about_sec_title {
-    width: calc(100% - 60px);
-    margin: 0 30px;
-    /* height set by js */
-    font-size: 2rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    padding-top: 60px;
+    width: auto;
+    margin-right: 60px;
+    flex-shrink: 0;
+}
 
+.about_sec_title p {
+    font-size: 3rem;
+    -ms-transform:     skew(0,-0deg);
+    -moz-transform:    skew(0,-0deg);
+    -webkit-transform: skew(0,-0deg);
+    -o-transform:      skew(0,-0deg);
+    white-space: nowrap;
+    text-stroke: 1px black;
+    /* color: rgba(0,0,0,0); */
 }
 
 .about_input_cont {
-    width: 100%;
-    /* height set by js */
+    max-width: 100%;
+    flex-grow: 1;
+    flex-shrink: 0;
+    height: calc(100% - 60px);
+    min-width: 500px;
+    max-width: 800px;
+    padding-top: 60px;
 }
 
 textarea {
-    width: calc(100% - 60px);
-    margin: 0 30px;
+    -moz-appearance:none;
+    outline:0px none transparent;
+    padding: 6px 0;
     /* margin: 0 30px; */
+    width: 100%;
     height: 100%;
     font-size: 1rem;
     border: none;
-    -webkit-touch-callout: none;
+    /* -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     -o-user-select: none;
-    user-select: none;
+    user-select: none; */
     background-color: rgba(0,0,0,0);
     resize: none;
+    font-size: 2rem;
+    font-family: 'Roboto Mono', monospace;
 }
 
 .about_copy {
@@ -212,7 +255,6 @@ textarea {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    padding: 0 40px;
 }
 
 .submit_left p {
@@ -223,6 +265,7 @@ textarea {
     flex-direction: column;
     justify-content: center;
     text-align: justify;
+    padding: 0 40px;
 }
 
 .submit_text {

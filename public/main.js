@@ -1,3 +1,5 @@
+const CANV_MULT_RATIO = 2;
+
 const sectIDs      = ["home","about","dig_lit","submit","faq"];
 // const buttonColors = [ "F0433A", "C9283E", "820333", "540032", "2E112D"];
 const buttonColors = [ "ff1f00", "ff1f00", "ff1f00", "ff1f00", "ff1f00"];
@@ -16,6 +18,19 @@ function getDist(x1,y1,x2,y2) {
     return Math.sqrt((a*a)+(b*b));
 }
 
+function randString(len) {
+    var str = "";
+    var exclude = [2483,7333,2181,7330,6575,2255,2258,2747,5887,11252,9857];
+    for (var i = 0; i < len; i++) {
+        var curCharCode = randInt(13,11500);
+        while (exclude.indexOf(curCharCode) > -1 || String.fromCharCode(curCharCode) == "⯴")
+            curCharCode = randInt(13,11500);
+        console.log(curCharCode);
+        str += String.fromCharCode(curCharCode);
+    }
+    return str;
+}
+
 function hexToRgb(hex) {
     var m = hex.match(/^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i);
     return [
@@ -28,25 +43,18 @@ function hexToRgb(hex) {
 /**
  * Returns a random integer between min (inclusive) and max (inclusive)
  */
-function r_in_r(min, max) {
+function randInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function randChar() {
-    var n = r_in_r(33, 255);
+    var n = randInt(33, 255);
     var ch = String.fromCharCode(n);
     while (ch.trim().length == 0 || [157,160,150,133,148,131,154,152,157,156,155,144,143,141,147,137,159,149,142,134,140,128,132,153,130,139,135,129,127,145,146].indexOf(n) >= 0) {
-        n = r_in_r(33, 255);
+        n = randInt(33, 255);
         ch = String.fromCharCode(n);
     }
     return ch;
-}
-
-function getDist(x1,y1,x2,y2) {
-    var a = x1 - x2
-    var b = y1 - y2
-
-    return Math.sqrt((a*a)+(b*b));
 }
 
 /******************************************************************************/
@@ -84,14 +92,6 @@ function menuButtonClickHandler(ev) {
     }, 1000);
 }
 
-function initMenu() {
-    menuCharWidth = document.getElementById("home_mb").clientWidth;
-    updateAllMenuButtons();
-    for (var i = 0; i < sectIDs.length; i++) {
-        document.getElementById(sectIDs[i] + "_mb").addEventListener("click",menuButtonClickHandler);
-    }
-}
-
 function updateTitleColors() {
     var maxDist = 200;
     var colorStep = 1;
@@ -114,6 +114,15 @@ function updateTitleColors() {
         for (var r = 0; r < rgb.length; r++) rgb[r] = (rgb[r] * mult).toFixed(0);
         buttonCh.style.color = "rgb(" + (Math.floor(rgb[0]/colorStep)*colorStep) + "," + (Math.floor(rgb[1]/colorStep)*colorStep) + "," + (Math.floor(rgb[2]/colorStep)*colorStep) + ")";
     }
+}
+
+function initMenu() {
+    menuCharWidth = document.getElementById("home_mb").clientWidth;
+    updateAllMenuButtons();
+    for (var i = 0; i < sectIDs.length; i++) {
+        document.getElementById(sectIDs[i] + "_mb").addEventListener("click",menuButtonClickHandler);
+    }
+    resizeHandlers.push(updateAllMenuButtons);
 }
 
 /******************************************************************************/
@@ -183,17 +192,87 @@ function initSections() {
 }
 
 /******************************************************************************/
+/******************************* HOME SECTION *********************************/
+/******************************************************************************/
+
+const HOME_TEXT = "-*!+~";
+
+var homeSection;
+
+var homeCanv;
+var homeCtx;
+
+var curDrawCharInd = 0;
+
+var homeLastMX;
+var homeLastMY;
+
+function clearHomeCanv() {
+    homeCtx.clearRect(0,0,homeCanv.width,homeCanv.height);
+}
+
+function homeCanvMouseMoveListener(ev) {
+    var mx = ev.clientX * CANV_MULT_RATIO;
+    var my = (ev.clientY + document.getElementsByTagName("main")[0].scrollTop) * CANV_MULT_RATIO;
+
+    var dist = getDist(homeLastMX,homeLastMY,mx,my);
+    if ((!homeLastMX || !homeLastMY) || dist > 5) {
+        homeLastMX = mx;
+        homeLastMY = my;
+        homeCtx.font = ((Math.pow(dist,1.2))*CANV_MULT_RATIO) + "px Roboto Mono";
+        var curChar = randChar();
+        if (chance.bool({likelihood: 10}))
+            homeCtx.fillText(curChar,mx,my);
+        homeCtx.strokeText(curChar,mx,my);
+        curDrawCharInd = (curDrawCharInd+1)%HOME_TEXT.length;
+    }
+}
+
+function initHomeCanv() {
+    homeCanv = document.getElementById("homeCanv");
+    homeCtx = homeCanv.getContext("2d");
+
+    homeCtx.clearRect(0,0,homeCanv.width,homeCanv.height);
+
+    homeCanv.width  = homeSection.clientWidth  * CANV_MULT_RATIO;
+    homeCanv.height = homeSection.clientHeight * CANV_MULT_RATIO;
+
+
+    homeCtx.textAlign = "center";
+    homeCtx.stokeStyle = "white";
+    homeCtx.fillStyle = "blue";
+}
+
+function initHomeSection() {
+    homeSection = document.getElementById("home_sec");
+    initHomeCanv();
+    homeCanv.addEventListener("mousemove",homeCanvMouseMoveListener);
+    homeCanv.addEventListener("click",clearHomeCanv);
+    resizeHandlers.push(initHomeCanv);
+}
+
+/******************************************************************************/
 /******************************* ABOUT GL-PH SECTION **************************/
 /******************************************************************************/
 
-function setHeights() {
-    document.getElementById("about_sec_title").style.height = (window.innerHeight - sectionHeight) + "px";
-    var aboutIntput = document.getElementById("about_input");
-    aboutIntput.parentNode.style.height = (sectionHeight - (window.innerHeight - sectionHeight)) + "px";
+const ABOUT_TEXT = "This is some information about gl-ph. There will be more later! This is some information about gl-ph. There will be more later! This is some information about gl-ph. There will be more later! This is some information about gl-ph. There will be more later!";
+
+var nextAboutTextInd = 0;
+
+function handleAboutTyping(ev) {
+    var inp = document.getElementById("about_input");
+    if (inp.value.length < ABOUT_TEXT.length) {
+        setTimeout(function () {
+            var inp = document.getElementById("about_input");
+            var len = inp.value.length;
+            inp.value = ABOUT_TEXT.slice(0,len);
+        }, 100);
+    }
 }
 
 function initAboutGLPH() {
-    setHeights();
+    document.getElementById("about_input").value = "";
+    document.getElementById("about_input").addEventListener("keydown",handleAboutTyping);
 }
 
 /******************************************************************************/
@@ -248,9 +327,9 @@ function updateSubmitMovePos() {
     var dist = getSubmitDist();
     var maxJitter = Math.pow(Math.max(dist,0),0.3);
 
-    var newTop  = Math.max(document.getElementById("submit_sec").offsetTop-37,Math.min(curY + r_in_r(-maxJitter,maxJitter),
+    var newTop  = Math.max(document.getElementById("submit_sec").offsetTop-37,Math.min(curY + randInt(-maxJitter,maxJitter),
                 document.getElementById("submit_sec").offsetTop + document.getElementById("submit_sec").clientHeight - drag.clientHeight + 30));
-    var newLeft = Math.max(-5,Math.min(curX + r_in_r(-maxJitter,maxJitter),
+    var newLeft = Math.max(-5,Math.min(curX + randInt(-maxJitter,maxJitter),
                 window.innerWidth - drag.clientWidth));
     drag.style.top  = newTop  + "px";
     drag.style.left = newLeft + "px";
@@ -319,6 +398,7 @@ function initSubmit() {
     placeSubmits();
     if (window.innerWidth/window.innerHeight < 1.12)
         finalizeSubmit();
+    resizeHandlers.push(resizeUpdateSubmitTexts);
 }
 
 /******************************************************************************/
@@ -333,9 +413,9 @@ var curLoadCh = 0;
 
 function loadStep() {
     // var loadEl = document.getElementById('title_sp');
-    // var nextChar = r_in_r(0,loadChs.length-1);
+    // var nextChar = randInt(0,loadChs.length-1);
     // while (nextChar == loadChs.indexOf(loadEl.innerHTML))
-    //     nextChar = r_in_r(0,loadChs.length-1);
+    //     nextChar = randInt(0,loadChs.length-1);
     // loadEl.innerHTML = loadChs[nextChar];
     // loadEl.innerHTML = randChar();
 
@@ -370,27 +450,36 @@ function endLoad() {
 }
 
 /******************************************************************************/
-/******************************* INIT *****************************************/
+/******************************* RESIZE ***************************************/
 /******************************************************************************/
 
-function init() {
-    startLoad();
-    initMenu();
-    initSections();
-    initSubmit();
-    initAboutGLPH();
-    // setTimeout(endLoad, r_in_r(1000,2000));
-    endLoad();
-}
-
+var resizeHandlers = [];
 var resizeTimeout;
 
 function resize() {
     if (resizeTimeout) clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(function () {
-        updateAllMenuButtons();
-        resizeUpdateSubmitTexts();
+        for (var i = 0; i < resizeHandlers.length; i++) {
+            console.log(resizeHandlers[i]);
+            resizeHandlers[i]();
+        }
     }, 100);
+}
+
+/******************************************************************************/
+/******************************* INIT *****************************************/
+/******************************************************************************/
+
+function init() {
+    startLoad();
+    grainOverlay.init();
+    initMenu();
+    initSections();
+    initHomeSection();
+    initAboutGLPH();
+    initSubmit();
+    // setTimeout(endLoad, randInt(1000,2000));
+    endLoad();
 }
 
 window.onload = init;

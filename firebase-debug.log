@@ -1,0 +1,41 @@
+[debug] [2018-02-14T20:37:28.356Z] ----------------------------------------------------------------------
+[debug] [2018-02-14T20:37:28.358Z] Command:       /usr/local/Cellar/node/9.3.0_1/bin/node /usr/local/bin/firebase serve
+[debug] [2018-02-14T20:37:28.358Z] CLI Version:   3.17.4
+[debug] [2018-02-14T20:37:28.358Z] Platform:      darwin
+[debug] [2018-02-14T20:37:28.358Z] Node Version:  v9.3.0
+[debug] [2018-02-14T20:37:28.358Z] Time:          Wed Feb 14 2018 15:37:28 GMT-0500 (EST)
+[debug] [2018-02-14T20:37:28.358Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-02-14T20:37:28.367Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-02-14T20:37:28.368Z] > authorizing via signed-in user
+[debug] [2018-02-14T20:37:28.369Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-02-14T20:37:28.369Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ { refresh_token: '1/P9wTBZvYX0anH8CnA9F7p0wBB4fhsEDgNEQX3UztoNw',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Wed Feb 14 2018 15:37:28 GMT-0500 (EST)
+[debug] [2018-02-14T20:37:28.517Z] <<< HTTP RESPONSE 200
+[debug] [2018-02-14T20:37:28.531Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/gl-ph-a275f  
+  
+ Wed Feb 14 2018 15:37:28 GMT-0500 (EST)
+[debug] [2018-02-14T20:37:28.803Z] <<< HTTP RESPONSE 200
+[debug] [2018-02-14T20:37:28.804Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/gl-ph-a275f/tokens  
+  
+ Wed Feb 14 2018 15:37:28 GMT-0500 (EST)
+[debug] [2018-02-14T20:37:29.152Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/samkilgus/sync/gl-ph/website'...
+[info] 
+[debug] [2018-02-14T20:37:29.154Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/gl-ph-a275f  
+  
+ Wed Feb 14 2018 15:37:29 GMT-0500 (EST)
+[debug] [2018-02-14T20:37:29.477Z] <<< HTTP RESPONSE 200
+[debug] [2018-02-14T20:37:29.477Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/1084963336851/clients/_:getWebAppConfig  
+  
+ Wed Feb 14 2018 15:37:29 GMT-0500 (EST)
+[debug] [2018-02-14T20:37:29.858Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: public
+[info] ✔  hosting: Local server: http://localhost:5000
+
