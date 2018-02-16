@@ -261,42 +261,112 @@ textarea {
 .submit_sec {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    background-color: blue !important;
 }
 
-.submit_cont {
-    width: 50%;
-    height: 100%;
-}
-
-.submit_right {
-    background-color: blue;
-    -webkit-text-stroke: 1px white;
-    text-stroke: white black;
-    color: blue;
-}
-
-.submit_left {
+.submitElement {
+    width: calc(20% - 20px);
+    font-size: calc(5vw);
+    padding: 10px;
     display: flex;
-    flex-direction: row;
-    justify-content: center;
-}
-
-.submit_left p {
-    height: 100%;
-    display: none;
-    color: red;
-    font-size: 2rem;
     flex-direction: column;
     justify-content: center;
-    text-align: justify;
-    padding: 0 40px;
+    text-align: center;
 }
 
-.submit_text {
-    font-size: 7rem;
-    position: absolute;
-    z-index: 5;
-    /* This keeps the button from being highlighted */
+.centerSE {
+    color: rgba(255,255,255,1);
+    text-stroke: 1px white;
+    -webkit-text-stroke: 1px white;
+    transition: color 0.2s;
+    text-decoration: underline;
+}
+
+.centerSE:hover {
+    color: rgba(255,255,255,0.5);
+    transition: color 0.2s, text-stroke 0.2s, -webkit-text-stroke 0.2s;
+    cursor: pointer;
+}
+
+.centerSE.stage0 {
+    color: blue;
+    text-stroke: 1px white;
+    -webkit-text-stroke: 1px white;
+    transition: color 0.2s, text-stroke 0.2s, -webkit-text-stroke 0.2s;
+    cursor: progress;
+}
+
+.centerSE.stage1 {
+    color: blue;
+    text-stroke: 1px white;
+    -webkit-text-stroke: 1px white;
+    transition: color 0.2s, text-stroke 0.2s, -webkit-text-stroke 0.2s;
+    cursor: progress;
+}
+
+.centerSE.stage2 {
+    color: blue;
+    text-stroke: 1px white;
+    -webkit-text-stroke: 1px white;
+    transition: color 0.2s, text-stroke 0.2s, -webkit-text-stroke 0.2s;
+    cursor: progress;
+}
+
+.centerSE.stage3 {
+    color: blue;
+    text-stroke: 1px white;
+    -webkit-text-stroke: 1px white;
+    transition: color 0.2s, text-stroke 0.2s, -webkit-text-stroke 0.2s;
+    cursor: progress;
+    text-decoration-color: red;
+    text-decoration-style: wavy;
+}
+
+.centerSE.stage4 {
+    color: blue;
+    text-stroke: 1px red;
+    -webkit-text-stroke: 1px red;
+    transition: color 0.2s, text-stroke 0.2s, -webkit-text-stroke 0.2s;
+    cursor: progress;
+    text-decoration-color: red;
+    text-decoration-style: wavy;
+}
+
+.centerSE.stage5 {
+    color: red;
+    text-stroke: 1px white;
+    -webkit-text-stroke: 1px white;
+    transition: color 0.2s, text-stroke 0.2s, -webkit-text-stroke 0.2s;
+    cursor: progress;
+    text-decoration-color: red;
+    text-decoration-style: wavy;
+}
+
+.centerSE.stage6 {
+    color: red;
+    text-stroke: 1px white;
+    -webkit-text-stroke: 1px white;
+    transition: color 0.2s, text-stroke 0.2s, -webkit-text-stroke 0.2s;
+    cursor: progress;
+    text-decoration-color: red;
+    text-decoration-style: wavy;
+}
+
+.centerSE.stage7 {
+    color: red;
+    text-stroke: 1px white;
+    -webkit-text-stroke: 1px white;
+    transition: color 0.2s, text-stroke 0.2s, -webkit-text-stroke 0.2s;
+    cursor: progress;
+    text-decoration-color: red;
+    text-decoration-style: wavy;
+}
+
+.middleSE {
+    pointer-events: none;
+    color: blue;
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
      -khtml-user-select: none; /* Konqueror HTML */
@@ -306,59 +376,16 @@ textarea {
                                   supported by Chrome and Opera */
 }
 
-.grab {
-    z-index: 100;
-    -webkit-text-stroke: 1px white;
-    text-stroke: white black;
-    color: black;
-}
-
-.active_submit {
-    z-index: 100;
-    color: white;
-}
-
-.active_submit:hover {
-    cursor: pointer;
-}
-
-.active_submit:before {
-    content: ".......................................";
-    color: rgba(0,0,0,0);
-    font-size: 1.5rem;
-    text-stroke: 0px black;
-    width: 100%;
-    position: absolute;
-    height: 100px;
-    bottom: -55px;
-    left: -5px;
-    overflow-x: hidden;
-    overflow-y: visible;
-    text-decoration: underline wavy red;
-}
-
-.grab:hover {
-    cursor: move; /* fallback if grab cursor is unsupported */
-    cursor: grab;
-    cursor: -moz-grab;
-    cursor: -webkit-grab;
-}
-
-.grab:active {
-    cursor: grabbing;
-    cursor: -moz-grabbing;
-    cursor: -webkit-grabbing;
-}
-
-@keyframes dropAnim {
-    0%   {color: rgba(255,255,255,0);}
-    50%  {color: rgba(255,255,255,0.4);}
-    100% {color: rgba(255,255,255,0);}
-}
-
-.drop {
+.outerSE {
+    pointer-events: none;
     color: blue;
-    animation: dropAnim 0.5s infinite ease-in-out;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
 }
 
 /******************************************************************************/

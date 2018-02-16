@@ -319,126 +319,112 @@ function initAboutGLPH() {
 /******************************* SUBMIT SECTION *******************************/
 /******************************************************************************/
 
-var updateSubmitMovePosInterval;
-var clickPointX;
-var clickPointY;
+const SUBMIT_ANIM_STEP_TIME = 200;
 
-var finalized = false;
+var numSubmitElements = 25;
+var centerSE = 13;
+var middleSE = [7,8,9,12,14,17,18,19];
+var outerSE  = [1,2,3,4,5,6,10,11,15,16,20,21,22,23,24,25];
+var submitButton;
+
+var submitAnimTimeout;
+var curSubmitStage;
+
+const SUBMIT_ANIM_STAGES = [
+    //outerSE        |middleSE
+    //color   stroke |color    stroke
+    ["blue", "blue", "blue",  "white"], // 0
+    ["blue", "white","blue",  "white"], // 1
+    ["blue", "white","white", "white"], // 2
+    ["white","white","white", "white"], // 3
+    ["white","white","white", "red"],   // 4
+    ["white","red",  "white", "red"],   // 5
+    ["red",  "red",  "red",   "red"],   // 6
+    ["white","red",  "white", "red"],   // 7
+];
+
+function updateOuterSE(color,stroke,func) {
+    var outerSEElements = document.getElementsByClassName("outerSE");
+    for (var i = 0; i < outerSEElements.length; i++) {
+        outerSEElements[i].style.color = color;
+        outerSEElements[i].style.textStroke = "1px " + stroke;
+        outerSEElements[i].style.webkitTextStroke = "1px " + stroke;
+        if (func) func(outerSEElements[i]);
+    }
+}
+
+function updateMiddleSE(color,stroke,func) {
+    var middleSEElements = document.getElementsByClassName("middleSE");
+    for (var i = 0; i < middleSEElements.length; i++) {
+        middleSEElements[i].style.color = color;
+        middleSEElements[i].style.textStroke = "1px " + stroke;
+        middleSEElements[i].style.webkitTextStroke = "1px " + stroke;
+        if (func) func(middleSEElements[i]);
+    }
+}
+
+function submitStageStep() {
+    submitButton.classList.remove("stage" + curSubmitStage);
+    curSubmitStage++;
+    submitButton.classList.add("stage" + curSubmitStage);
+    console.log(SUBMIT_ANIM_STAGES[curSubmitStage]);
+    updateOuterSE(SUBMIT_ANIM_STAGES[curSubmitStage][0],SUBMIT_ANIM_STAGES[curSubmitStage][1]);
+    updateMiddleSE(SUBMIT_ANIM_STAGES[curSubmitStage][2],SUBMIT_ANIM_STAGES[curSubmitStage][3]);
+    if (curSubmitStage+1 == SUBMIT_ANIM_STAGES.length)
+        submitAnimTimeout = setTimeout(openSubmitLink, SUBMIT_ANIM_STEP_TIME);
+    else submitAnimTimeout = setTimeout(submitStageStep, SUBMIT_ANIM_STEP_TIME);
+}
+
+function submitClickHandler() {
+    curSubmitStage = 0;
+    submitButton.classList.add("stage" + curSubmitStage);
+    console.log(SUBMIT_ANIM_STAGES[curSubmitStage]);
+    updateOuterSE(SUBMIT_ANIM_STAGES[curSubmitStage][0],SUBMIT_ANIM_STAGES[curSubmitStage][1]);
+    updateMiddleSE(SUBMIT_ANIM_STAGES[curSubmitStage][2],SUBMIT_ANIM_STAGES[curSubmitStage][3]);
+    submitAnimTimeout = setTimeout(submitStageStep, SUBMIT_ANIM_STEP_TIME);
+}
+
+function submitCancelHandler() {
+    submitButton.classList.remove("stage7");
+    updateOuterSE( "blue","blue");
+    updateMiddleSE("blue","blue");
+    submitButton.innerHTML = "SUBMIT";
+    clearTimeout(submitAnimTimeout);
+}
 
 function openSubmitLink() {
-    window.open("https://www.lawctopus.com/wp-content/uploads/2017/10/submit-a-new-post.png","_self");
-    // submit link here ^
-}
-
-function finalizeSubmit() {
-    var drag = document.getElementById("drag");
-    var drop = document.getElementById("drop");
-    drag.removeEventListener("mousedown",submitMoveMouseDownHandler);
-    drag.removeEventListener("mouseup",submitMoveMouseUpHandler);
-    drag.removeEventListener("mouseout",submitMoveMouseUpHandler);
-    if (updateSubmitMovePosInterval) clearInterval(updateSubmitMovePosInterval);
-    drag.className = "submit_text active_submit";
-    drop.className = "submit_text";
-    drag.style.top  = drop.style.top;
-    drag.style.left = drop.style.left;
-    var thanksText = document.getElementById("thanks_text");
-    thanksText.style.display = "flex";
+    submitButton.innerHTML = "HOORAY";
     setTimeout(function () {
-        document.getElementById("drag").addEventListener("mousedown",openSubmitLink);
-    }, 10);
-
+        submitCancelHandler();
+        window.open("https://goo.gl/images/iK3BZK","_blank");
+    }, 300);
 }
 
-function getSubmitDist() {
-    var drag = document.getElementById('drag');
-    var drop = document.getElementById('drop');
-    dragY = drag.offsetTop  + (drag.clientHeight/2);
-    dragX = drag.offsetLeft + (drag.clientWidth/2);
-    dropY = drop.offsetTop  + (drop.clientHeight/2);
-    dropX = drop.offsetLeft + (drop.clientWidth/2);
-    return getDist(dragX,dragY,dropX,dropY);
-}
-
-function updateSubmitMovePos() {
-    var drag = document.getElementById("drag");
-    var scH = document.getElementById("section_scroll").scrollHeight;
-    var curX = mouseX - clickPointX;
-    var curY = mouseY - clickPointY
-    var dist = getSubmitDist();
-    var maxJitter = Math.pow(Math.max(dist,0),0.3);
-
-    var newTop  = Math.max(document.getElementById("submit_sec").offsetTop-37,Math.min(curY + randInt(-maxJitter,maxJitter),
-                document.getElementById("submit_sec").offsetTop + document.getElementById("submit_sec").clientHeight - drag.clientHeight + 30));
-    var newLeft = Math.max(-5,Math.min(curX + randInt(-maxJitter,maxJitter),
-                window.innerWidth - drag.clientWidth));
-    drag.style.top  = newTop  + "px";
-    drag.style.left = newLeft + "px";
-    if (dist < 10) {
-        finalized = true;
-        finalizeSubmit();
+function initSubmitElements() {
+    for (var i = 0; i < numSubmitElements; i++) {
+        var elID = i+1;
+        var submitElement = document.createElement("p");
+        submitElement.innerHTML = "SUBMIT";
+        submitElement.className = "submitElement";
+        if (elID == centerSE) {
+            submitElement.classList.add("centerSE");
+            submitElement.id = "centerSE";
+        }
+        else if (middleSE.indexOf(elID) > -1) {
+            submitElement.classList.add("middleSE");
+        }
+        else if (outerSE.indexOf(elID) > -1) {
+            submitElement.classList.add("outerSE");
+        }
+        document.getElementById("submit_sec").appendChild(submitElement);
     }
-}
-
-function submitMoveMouseDownHandler(ev) {
-    clickPointX = ev.clientX - ev.target.offsetLeft;
-    clickPointY = ev.clientY - ev.target.offsetTop;
-    document.getElementById("drop").className = "drop submit_text";
-    updateSubmitMovePosInterval = setInterval(updateSubmitMovePos, 10);
-}
-
-function submitMoveMouseUpHandler(ev) {
-    document.getElementById("drop").className = "submit_text";
-    placeSubmits();
-    if (updateSubmitMovePosInterval) clearInterval(updateSubmitMovePosInterval);
-}
-
-function resetDrag() {
-    var drag = document.getElementById("drag");
-    drag.addEventListener("mousedown",submitMoveMouseDownHandler);
-    drag.addEventListener("mouseup",submitMoveMouseUpHandler);
-    drag.addEventListener("mouseout",submitMoveMouseUpHandler);
-    drag.removeEventListener("click",openSubmitLink);
-    drag.className = "submit_text grab";
-    drag.style = null;
-    var pNode = document.getElementById("drag_home");
-    pNode.style = null;
-}
-
-function placeSubmits() {
-    var drag = document.getElementById("drag");
-    var texts = document.getElementsByClassName("submit_text");
-    var pNode = document.getElementById("drag_home");
-    var tnum = 1;
-    texts[tnum].style.left = (window.innerWidth/4) - (texts[tnum].clientWidth/2) + "px";
-    texts[tnum].style.top  = (pNode.offsetTop) + (sectionHeight/2) - (texts[tnum].clientHeight/2) + "px";
-    var tnum = 0;
-    pNode = texts[tnum].parentNode;
-    texts[tnum].style.left = (pNode.offsetLeft) + (window.innerWidth/4)  - (texts[tnum].clientWidth/2)  + "px";
-    texts[tnum].style.top  = (pNode.offsetTop)  + (sectionHeight/2) - (texts[tnum].clientHeight/2) + "px";
-}
-
-var curWindowWidth;
-var curWindowHeight;
-
-function resizeUpdateSubmitTexts() {
-    var drag = document.getElementById("drag");
-    var drop = document.getElementById("drop");
-
-    if (!finalized) {
-        resetDrag();
-        placeSubmits();
-        if (window.innerWidth/window.innerHeight < 1.12)
-            finalizeSubmit();
-    }
-    else finalizeSubmit();
 }
 
 function initSubmit() {
-    resetDrag();
-    placeSubmits();
-    if (window.innerWidth/window.innerHeight < 1.12)
-        finalizeSubmit();
-    resizeHandlers.push(resizeUpdateSubmitTexts);
+    initSubmitElements();
+    submitButton = document.getElementById("centerSE");
+    submitButton.addEventListener("mousedown",submitClickHandler);
+    submitButton.addEventListener("mouseup",submitCancelHandler);
 }
 
 /******************************************************************************/
@@ -519,8 +505,8 @@ function init() {
     initHomeSection();
     initAboutGLPH();
     initSubmit();
-    setTimeout(endLoad, randInt(1000,2000));
-    // endLoad();
+    // setTimeout(endLoad, randInt(1000,2000));
+    endLoad();
 }
 
 window.onload = init;
