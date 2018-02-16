@@ -142,6 +142,14 @@ section.light {
     background-color: white;
 }
 
+.sec_title {
+    padding-top: 60px;
+    width: auto;
+    margin-right: 60px;
+    flex-shrink: 0;
+    transform-origin: left;
+}
+
 /******************************************************************************/
 /**************************** HOME SECTION ************************************/
 /******************************************************************************/
@@ -173,20 +181,13 @@ section.light {
     flex-wrap: wrap;
 }
 
-.about_sec_title {
-    padding-top: 60px;
-    width: auto;
-    margin-right: 60px;
-    flex-shrink: 0;
-}
-
-.about_sec_title p {
+#about_sec_title p {
     font-size: 3rem;
     -ms-transform:     skew(0,-0deg);
     -moz-transform:    skew(0,-0deg);
     -webkit-transform: skew(0,-0deg);
     -o-transform:      skew(0,-0deg);
-    white-space: nowrap;
+    /* white-space: nowrap; */
     text-stroke: 1px black;
     /* color: rgba(0,0,0,0); */
 }
@@ -229,6 +230,29 @@ textarea {
     width: 100%;
 }
 
+/******************************************************************************/
+/**************************** ABOUT DIG_LIT ***********************************/
+/******************************************************************************/
+
+.dig_lit_sec {
+    width: calc(100% - 120px);
+    padding: 0 60px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+#about_dig_lit_title p {
+    font-size: 3rem;
+    -ms-transform:     skew(0,-0deg);
+    -moz-transform:    skew(0,-0deg);
+    -webkit-transform: skew(0,-0deg);
+    -o-transform:      skew(0,-0deg);
+    /* white-space: nowrap; */
+    text-stroke: 1px black;
+    /* color: rgba(0,0,0,0); */
+}
 
 /******************************************************************************/
 /**************************** SUBMIT ******************************************/
@@ -335,4 +359,28 @@ textarea {
 .drop {
     color: blue;
     animation: dropAnim 0.5s infinite ease-in-out;
+}
+
+/******************************************************************************/
+/**************************** FAQ *********************************************/
+/******************************************************************************/
+
+.faq_sec {
+    width: calc(100% - 120px);
+    padding: 0 60px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+#about_faq_title p {
+    font-size: 3rem;
+    -ms-transform:     skew(0,-0deg);
+    -moz-transform:    skew(0,-0deg);
+    -webkit-transform: skew(0,-0deg);
+    -o-transform:      skew(0,-0deg);
+    /* white-space: nowrap; */
+    text-stroke: 1px black;
+    /* color: rgba(0,0,0,0); */
 }

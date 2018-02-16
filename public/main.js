@@ -150,6 +150,12 @@ function handlePageMouseMove(ev) {
 /******************************* SECTIONS *************************************/
 /******************************************************************************/
 
+const MAX_TITLE_SKEW = 10;
+
+var updateTitleSkewsInterval;
+var curTitleSkew = 0;
+var lastScrollTop = 0;
+
 function scrollToSection(sID) {
     var scrollEl = document.getElementById(sID + "_sec");
     scrollEl.scrollIntoView({behavior: "smooth",block: "end", inline: "nearest"});
@@ -162,18 +168,45 @@ function isScrolledIntoView(el) {
     return isVisible;
 }
 
+function updateTitleSkews() {
+    if (!scrolling) {
+        var titles = document.getElementsByClassName("sec_title");
+        for (var i = 0; i < titles.length; i++)
+            titles[i].style.transform = "skew(0, " + curTitleSkew + "deg)";
+        if (curTitleSkew != 0)
+            curTitleSkew -= (curTitleSkew/Math.abs(curTitleSkew)) *
+                            Math.min(0.5,Math.abs(curTitleSkew));
+    }
+}
+
 function sectionScrollHandler(ev) {
+    scrolling = true;
     if (!updateScroll) return;
     var cont = ev.target;
     var sections = cont.getElementsByTagName("section");
+
     var i;
-    for (i = sections.length-1; i >= 0; i--) {
-        if (isScrolledIntoView(sections[i])) {
-            break;
-        }
-    }
+    for (i = sections.length-1; i >= 0; i--)
+        if (isScrolledIntoView(sections[i])) break;
+
     activePage = sectIDs.indexOf(sections[i].id.replace("_sec",""));
     updateAllMenuButtons();
+
+    var scrollDiff = this.scrollTop - lastScrollTop;
+    var scrollDir;
+    if (this.scrollTop != lastScrollTop) {
+        scrollDir = scrollDiff / Math.abs(scrollDiff);
+        lastScrollTop = this.scrollTop;
+    }
+
+    curTitleSkew = Math.max(-MAX_TITLE_SKEW,Math.min(MAX_TITLE_SKEW,curTitleSkew+(scrollDiff/30)));
+
+    if (!updateTitleSkewsInterval)
+        updateTitleSkewsInterval = setInterval(updateTitleSkews, 10);
+
+    setTimeout(function () {
+        scrolling = false;
+    }, 10);
 }
 
 function fixSectionHeights() {
@@ -181,8 +214,14 @@ function fixSectionHeights() {
     var sections = document.getElementsByTagName("section");
     sectionHeight = window.innerHeight*(17/20);
     for (var i = 0; i < sections.length; i++) {
-        sections[i].style.minHeight = sectionHeight + "px";
-        sections[i].style.height    = sectionHeight + "px";
+        if (sections[i].id == "home_sec") {
+            sections[i].style.minHeight = window.innerHeight + "px";
+            sections[i].style.height    = window.innerHeight + "px";
+        }
+        else {
+            sections[i].style.minHeight = sectionHeight + "px";
+            sections[i].style.height    = sectionHeight + "px";
+        }
     }
 }
 
@@ -255,19 +294,20 @@ function initHomeSection() {
 /******************************* ABOUT GL-PH SECTION **************************/
 /******************************************************************************/
 
-const ABOUT_TEXT = "This is some information about gl-ph. There will be more later! This is some information about gl-ph. There will be more later! This is some information about gl-ph. There will be more later! This is some information about gl-ph. There will be more later!";
+const ABOUT_TEXT = "This is some information about gl-ph. There will be more later!";
 
 var nextAboutTextInd = 0;
 
 function handleAboutTyping(ev) {
     var inp = document.getElementById("about_input");
-    if (inp.value.length < ABOUT_TEXT.length) {
+    if (inp.value.length < ABOUT_TEXT.length || ev.key == "Backspace" || ev.metaKey || ev.ctrlKey) {
         setTimeout(function () {
             var inp = document.getElementById("about_input");
             var len = inp.value.length;
             inp.value = ABOUT_TEXT.slice(0,len);
         }, 100);
     }
+    else ev.preventDefault();
 }
 
 function initAboutGLPH() {
@@ -447,6 +487,7 @@ function endLoad() {
             }, 1000);
         }, 1100);
     }, 200);
+    loaded = true;
 }
 
 /******************************************************************************/
@@ -478,8 +519,8 @@ function init() {
     initHomeSection();
     initAboutGLPH();
     initSubmit();
-    // setTimeout(endLoad, randInt(1000,2000));
-    endLoad();
+    setTimeout(endLoad, randInt(1000,2000));
+    // endLoad();
 }
 
 window.onload = init;
