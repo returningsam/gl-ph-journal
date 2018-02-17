@@ -317,6 +317,8 @@ var digLitAnimInterval;
 var curDigListAnimDist1 = 0;
 var curDigListAnimDist2 = -100;
 
+var digLitOriginialContent;
+
 function digLitAnimStep() {
     var startEl = document.getElementById("digLitStartText");
     var stX = startEl.offsetLeft;
@@ -335,7 +337,19 @@ function digLitAnimStep() {
     }
     curDigListAnimDist1 +=5;
     curDigListAnimDist2 +=5;
-    if (curDigListAnimDist2 > window.innerWidth) clearInterval(digLitAnimInterval);
+    if (curDigListAnimDist2 > Math.max(window.innerWidth, window.innerWidth)) {
+        setTimeout(finishDigLitAnim, 500);
+    }
+}
+
+function finishDigLitAnim() {
+    clearInterval(digLitAnimInterval);
+    var digLitAnimSections = document.getElementsByClassName("digLitAnimSection");
+    for (var i = 0; i < digLitAnimSections.length; i++) {
+        digLitAnimSections[i].style.color = "black";
+        digLitAnimSections[i].innerHTML = digLitOriginialContent[i];
+        if (document.getElementById("digLitStartText")) document.getElementById("digLitStartText").id = null;
+    }
 }
 
 function startDigLitAnim() {
@@ -347,13 +361,14 @@ function startDigLitAnim() {
 }
 
 function initDigLitAnim() {
+    digLitOriginialContent = [];
     var digLitAnimSections = document.getElementsByClassName("digLitAnimSection");
     for (var i = 0; i < digLitAnimSections.length; i++) {
+        digLitOriginialContent.push(digLitAnimSections[i].innerHTML);
         var secContentToks = digLitAnimSections[i].innerHTML.split(" ");
         for (var j = 0; j < secContentToks.length; j++) {
             if (secContentToks[j].startsWith("<span")) {
                 j++;
-                console.log(secContentToks[j]);
                 while (!secContentToks[j].endsWith("</span>")) j++;
                 continue;
             }
@@ -449,8 +464,13 @@ function submitCancelHandler() {
 function openSubmitLink() {
     submitButton.innerHTML = "HOORAY";
     setTimeout(function () {
-        submitCancelHandler();
-        window.open("https://goo.gl/images/iK3BZK","_blank");
+        submitButton.innerHTML = "THANKS";
+        setTimeout(function () {
+            setTimeout(function () {
+                submitCancelHandler();
+            }, 10);
+            window.open("https://goo.gl/images/iK3BZK","_blank");
+        }, 300);
     }, 300);
 }
 
