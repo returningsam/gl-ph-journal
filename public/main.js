@@ -314,36 +314,34 @@ var digLitShown = false;
 var digLitAnimGradientSpread = 50;
 var digLitAnimInterval;
 
-var curDigListAnimDist1 = 0;
-var curDigListAnimDist2 = -100;
+var curDigAnimEl1 = 0;
+var curDigAnimEl2 = -40;
 
 var digLitOriginialContent;
+var digLitAnimElements;
+
 
 function digLitAnimStep() {
-    var startEl = document.getElementById("digLitStartText");
-    var stX = startEl.offsetLeft;
-    var stY = startEl.offsetTop;
-
-    var digLitAnimElements = document.getElementsByClassName("digLitAnimElement");
-    for (var i = 0; i < digLitAnimElements.length; i++) {
-        var elX = digLitAnimElements[i].offsetLeft;
-        var elY = digLitAnimElements[i].offsetTop;
-
-        if (getDist(elX,elY,stX,stY) < curDigListAnimDist2 && digLitAnimElements[i].style.color != "black")
-            digLitAnimElements[i].style.color = "black";
-        else if (getDist(elX,elY,stX,stY) < curDigListAnimDist1 && digLitAnimElements[i].style.color != "red"
-                                                                && digLitAnimElements[i].style.color != "black")
-            digLitAnimElements[i].style.color = "red";
+    if (curDigAnimEl1 < digLitAnimElements.length) {
+        var el = digLitAnimElements[curDigAnimEl1];
+        el.style.color = "red";
     }
-    curDigListAnimDist1 +=5;
-    curDigListAnimDist2 +=5;
-    if (curDigListAnimDist2 > Math.max(window.innerWidth, window.innerWidth)) {
+
+    if (curDigAnimEl2 > -1) {
+        var el = digLitAnimElements[curDigAnimEl2];
+        el.style.color = "black";
+    }
+
+
+    curDigAnimEl1++;
+    curDigAnimEl2++;
+    if (curDigAnimEl2 >= digLitAnimElements.length) {
+        clearInterval(digLitAnimInterval);
         setTimeout(finishDigLitAnim, 500);
     }
 }
 
 function finishDigLitAnim() {
-    clearInterval(digLitAnimInterval);
     var digLitAnimSections = document.getElementsByClassName("digLitAnimSection");
     for (var i = 0; i < digLitAnimSections.length; i++) {
         digLitAnimSections[i].style.color = "black";
@@ -355,7 +353,15 @@ function finishDigLitAnim() {
 function startDigLitAnim() {
     if (!digLitShown) {
         digLitShown = true;
-        document.getElementById("digLitStartText").className = "done";
+        startLetters = document.getElementById("digLitStartText");
+        startLetters.className = "done";
+        digLitAnimElements = document.getElementsByClassName("digLitAnimElement");
+        digLitAnimElements = Array.prototype.slice.call(digLitAnimElements);
+        digLitAnimElements.sort(function (a,b) {
+            var sx = startLetters.offsetLeft;
+            var sy = startLetters.offsetTop;
+            return getDist(a.offsetLeft,a.offsetTop,sx,sy) - getDist(b.offsetLeft,b.offsetTop,sx,sy);
+        })
         digLitAnimInterval = setInterval(digLitAnimStep, 10);
     }
 }
@@ -435,7 +441,6 @@ function submitStageStep() {
     submitButton.classList.remove("stage" + curSubmitStage);
     curSubmitStage++;
     submitButton.classList.add("stage" + curSubmitStage);
-    console.log(SUBMIT_ANIM_STAGES[curSubmitStage]);
     updateOuterSE(SUBMIT_ANIM_STAGES[curSubmitStage][0],SUBMIT_ANIM_STAGES[curSubmitStage][1]);
     updateMiddleSE(SUBMIT_ANIM_STAGES[curSubmitStage][2],SUBMIT_ANIM_STAGES[curSubmitStage][3]);
     if (curSubmitStage+1 == SUBMIT_ANIM_STAGES.length)
