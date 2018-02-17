@@ -18,19 +18,6 @@ function getDist(x1,y1,x2,y2) {
     return Math.sqrt((a*a)+(b*b));
 }
 
-function randString(len) {
-    var str = "";
-    var exclude = [2483,7333,2181,7330,6575,2255,2258,2747,5887,11252,9857];
-    for (var i = 0; i < len; i++) {
-        var curCharCode = randInt(13,11500);
-        while (exclude.indexOf(curCharCode) > -1 || String.fromCharCode(curCharCode) == "⯴")
-            curCharCode = randInt(13,11500);
-        console.log(curCharCode);
-        str += String.fromCharCode(curCharCode);
-    }
-    return str;
-}
-
 function hexToRgb(hex) {
     var m = hex.match(/^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i);
     return [
@@ -214,14 +201,8 @@ function fixSectionHeights() {
     var sections = document.getElementsByTagName("section");
     sectionHeight = window.innerHeight*(17/20);
     for (var i = 0; i < sections.length; i++) {
-        if (sections[i].id == "home_sec") {
-            sections[i].style.minHeight = window.innerHeight + "px";
-            sections[i].style.height    = window.innerHeight + "px";
-        }
-        else {
-            sections[i].style.minHeight = sectionHeight + "px";
-            sections[i].style.height    = sectionHeight + "px";
-        }
+        sections[i].style.minHeight = sectionHeight + "px";
+        // sections[i].style.height    = sectionHeight + "px";
     }
 }
 
@@ -294,25 +275,97 @@ function initHomeSection() {
 /******************************* ABOUT GL-PH SECTION **************************/
 /******************************************************************************/
 
-const ABOUT_TEXT = "This is some information about gl-ph. There will be more later!";
+const ABOUT_TEXT = "This organization is one of the first undergraduate-run literary journals in the nation (if not the first) dedicated exclusively to the publication of digital literature (otherwise known as electronic literature, or e-lit). It is directed and housed by the Rochester Institute of Technology (RIT).\n\nWhy \"gl-ph?\"\n\nWikipedia says that a glyph is “a hieroglyphic character or symbol; a pictograph.” We say that it’s the interface between text and icon, between code and image. In our name, the hyphen, in a way, is a wild card, the space inside square brackets, a space to inhabit in fluid and dynamic ways.";
 
 var nextAboutTextInd = 0;
+var lastAboutTextLen = 0;
+var aboutTypingNumExtra = 1;
 
 function handleAboutTyping(ev) {
     var inp = document.getElementById("about_input");
     if (inp.value.length < ABOUT_TEXT.length || ev.key == "Backspace" || ev.metaKey || ev.ctrlKey) {
+        if (ev.key.length == 1) document.getElementById("aboutBGLetter").innerHTML = ev.key;
         setTimeout(function () {
             var inp = document.getElementById("about_input");
             var len = inp.value.length;
+            if (len > 0 && lastAboutTextLen < len) len += randInt(0,aboutTypingNumExtra);
+            aboutTypingNumExtra += randInt(0,1);
+            lastAboutTextLen = len;
             inp.value = ABOUT_TEXT.slice(0,len);
         }, 100);
     }
-    else ev.preventDefault();
+    else {
+        ev.preventDefault();
+        aboutTypingNumExtra--;
+    }
 }
 
 function initAboutGLPH() {
     document.getElementById("about_input").value = "";
     document.getElementById("about_input").addEventListener("keydown",handleAboutTyping);
+}
+
+/******************************************************************************/
+/******************************* DIG_LIT SECTION ******************************/
+/******************************************************************************/
+
+var startLetters;
+var digLitShown = false;
+var digLitAnimGradientSpread = 50;
+var digLitAnimInterval;
+
+var curDigListAnimDist1 = 0;
+var curDigListAnimDist2 = -100;
+
+function digLitAnimStep() {
+    var startEl = document.getElementById("digLitStartText");
+    var stX = startEl.offsetLeft;
+    var stY = startEl.offsetTop;
+
+    var digLitAnimElements = document.getElementsByClassName("digLitAnimElement");
+    for (var i = 0; i < digLitAnimElements.length; i++) {
+        var elX = digLitAnimElements[i].offsetLeft;
+        var elY = digLitAnimElements[i].offsetTop;
+
+        if (getDist(elX,elY,stX,stY) < curDigListAnimDist2 && digLitAnimElements[i].style.color != "black")
+            digLitAnimElements[i].style.color = "black";
+        else if (getDist(elX,elY,stX,stY) < curDigListAnimDist1 && digLitAnimElements[i].style.color != "red"
+                                                                && digLitAnimElements[i].style.color != "black")
+            digLitAnimElements[i].style.color = "red";
+    }
+    curDigListAnimDist1 +=5;
+    curDigListAnimDist2 +=5;
+    if (curDigListAnimDist2 > window.innerWidth) clearInterval(digLitAnimInterval);
+}
+
+function startDigLitAnim() {
+    if (!digLitShown) {
+        digLitShown = true;
+        document.getElementById("digLitStartText").className = "done";
+        digLitAnimInterval = setInterval(digLitAnimStep, 10);
+    }
+}
+
+function initDigLitAnim() {
+    var digLitAnimSections = document.getElementsByClassName("digLitAnimSection");
+    for (var i = 0; i < digLitAnimSections.length; i++) {
+        var secContentToks = digLitAnimSections[i].innerHTML.split(" ");
+        for (var j = 0; j < secContentToks.length; j++) {
+            if (secContentToks[j].startsWith("<span")) {
+                j++;
+                console.log(secContentToks[j]);
+                while (!secContentToks[j].endsWith("</span>")) j++;
+                continue;
+            }
+            secContentToks[j] = "<span class='digLitAnimElement'>" + secContentToks[j] + "</span>";
+        }
+        digLitAnimSections[i].innerHTML = secContentToks.join(" ");
+    }
+}
+
+function initDigLit() {
+    initDigLitAnim();
+    document.getElementById("digLitStartText").addEventListener("click",startDigLitAnim);
 }
 
 /******************************************************************************/
@@ -377,6 +430,7 @@ function submitStageStep() {
 
 function submitClickHandler() {
     curSubmitStage = 0;
+    submitButton.innerHTML = "HOLD";
     submitButton.classList.add("stage" + curSubmitStage);
     console.log(SUBMIT_ANIM_STAGES[curSubmitStage]);
     updateOuterSE(SUBMIT_ANIM_STAGES[curSubmitStage][0],SUBMIT_ANIM_STAGES[curSubmitStage][1]);
@@ -385,10 +439,10 @@ function submitClickHandler() {
 }
 
 function submitCancelHandler() {
-    submitButton.classList.remove("stage7");
     updateOuterSE( "blue","blue");
     updateMiddleSE("blue","blue");
     submitButton.innerHTML = "SUBMIT";
+    submitButton.className = "submitElement centerSE";
     clearTimeout(submitAnimTimeout);
 }
 
@@ -504,6 +558,7 @@ function init() {
     initSections();
     initHomeSection();
     initAboutGLPH();
+    initDigLit();
     initSubmit();
     // setTimeout(endLoad, randInt(1000,2000));
     endLoad();
