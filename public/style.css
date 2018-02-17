@@ -145,7 +145,6 @@ section.light {
 .sec_title {
     padding-top: 60px;
     width: auto;
-    margin-right: 60px;
     flex-shrink: 0;
     transform-origin: left;
 }
@@ -182,9 +181,6 @@ section.light {
 
 #about_sec_title {
     z-index: 1;
-    flex-grow: 0;
-    flex-shrink: 1;
-    max-height: 3rem;
 }
 
 #about_sec_title p {
@@ -201,12 +197,13 @@ section.light {
 .about_input_cont {
     width: 100%;
     height: auto;
+    max-height: 100%;
     flex-grow: 1;
     flex-shrink: 0;
-    min-width: 500px;
-    max-width: 800px;
+    max-width: 700px;
     padding-top: 60px;
-
+    display: flex;
+    flex-direction: column;
 }
 
 textarea {
@@ -216,11 +213,13 @@ textarea {
     padding: 6px 0;
     width: 100%;
     height: 100%;
+    min-height: 100%;
     font-size: 2vh;
     border: none;
     background-color: rgba(0,0,0,0);
     font-family: 'Roboto Mono', monospace;
     resize: none;
+    flex-grow: 1;
 }
 
 .about_copy {
