@@ -330,6 +330,8 @@ function digLitAnimStep() {
     if (curDigAnimEl2 > -1) {
         var el = digLitAnimElements[curDigAnimEl2];
         el.style.color = "black";
+        startLetters.style = null;
+        startLetters.className = "done";
     }
 
 
@@ -354,7 +356,7 @@ function startDigLitAnim() {
     if (!digLitShown) {
         digLitShown = true;
         startLetters = document.getElementById("digLitStartText");
-        startLetters.className = "done";
+        startLetters.style.textDecoration = "none";
         digLitAnimElements = document.getElementsByClassName("digLitAnimElement");
         digLitAnimElements = Array.prototype.slice.call(digLitAnimElements);
         digLitAnimElements.sort(function (a,b) {
