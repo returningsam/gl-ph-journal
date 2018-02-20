@@ -215,20 +215,28 @@ function initSections() {
 /******************************* HOME SECTION *********************************/
 /******************************************************************************/
 
-const HOME_TEXT = "-*!+~";
-
 var homeSection;
 
 var homeCanv;
 var homeCtx;
 
-var curDrawCharInd = 0;
-
 var homeLastMX;
 var homeLastMY;
 
+var curMainDrawEls = [];
+
 function clearHomeCanv() {
     homeCtx.clearRect(0,0,homeCanv.width,homeCanv.height);
+}
+
+function updateMainCanv() {
+    clearHomeCanv();
+    for (var i = 0; i < curMainDrawEls.length; i++) {
+        var curEl = curMainDrawEls[i];
+        homeCtx.font = curEl.font;
+        if (curEl.fill) homeCtx.fillText(curEl.ch,curEl.mx,curEl.my);
+        homeCtx.strokeText(curEl.ch,curEl.mx,curEl.my);
+    }
 }
 
 function homeCanvMouseMoveListener(ev) {
@@ -239,12 +247,16 @@ function homeCanvMouseMoveListener(ev) {
     if ((!homeLastMX || !homeLastMY) || dist > 5) {
         homeLastMX = mx;
         homeLastMY = my;
-        homeCtx.font = ((Math.pow(dist,1.2))*CANV_MULT_RATIO) + "px Roboto Mono";
+
         var curChar = randChar();
-        if (chance.bool({likelihood: 10}))
-            homeCtx.fillText(curChar,mx,my);
-        homeCtx.strokeText(curChar,mx,my);
-        curDrawCharInd = (curDrawCharInd+1)%HOME_TEXT.length;
+        var el = {
+            mx: mx,
+            my: my,
+            ch: curChar,
+            fill: chance.bool({likelihood: 10}),
+            font: ((Math.pow(dist,1.2))*CANV_MULT_RATIO) + "px Roboto Mono"
+        }
+        curMainDrawEls.push(el);
     }
 }
 
@@ -252,7 +264,7 @@ function initHomeCanv() {
     homeCanv = document.getElementById("homeCanv");
     homeCtx = homeCanv.getContext("2d");
 
-    homeCtx.clearRect(0,0,homeCanv.width,homeCanv.height);
+    clearHomeCanv()
 
     homeCanv.width  = homeSection.clientWidth  * CANV_MULT_RATIO;
     homeCanv.height = homeSection.clientHeight * CANV_MULT_RATIO;
@@ -261,6 +273,13 @@ function initHomeCanv() {
     homeCtx.textAlign = "center";
     homeCtx.stokeStyle = "white";
     homeCtx.fillStyle = "blue";
+
+    setInterval(function () {
+        if (curMainDrawEls.length > 0) {
+            curMainDrawEls.splice(0,Math.max(1,Math.round(Math.pow(curMainDrawEls.length,0.35))));
+            updateMainCanv();
+        }
+    }, 50);
 }
 
 function initHomeSection() {
