@@ -1,5 +1,5 @@
 :root {
-    --subhead-text-size: calc(4.5vw - 1vh);
+    --subhead-text-size: calc(2vw + 2vh);
     --body-text-size: calc(1vw + 1vh);
     --max-body-size: 800px;
 }
@@ -85,7 +85,6 @@ header p {
     display: flex;
     flex-direction: row;
     justify-content: center;
-
 }
 
 .menu_button_cont {
@@ -170,6 +169,7 @@ section.light {
 .home_sec {
     position: relative;
     padding: 0;
+    overflow: hidden;
 }
 
 .home_sec canvas {

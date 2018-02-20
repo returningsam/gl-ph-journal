@@ -201,7 +201,9 @@ function fixSectionHeights() {
     var sections = document.getElementsByTagName("section");
     sectionHeight = window.innerHeight*(17/20);
     for (var i = 0; i < sections.length; i++) {
-        sections[i].style.minHeight = sectionHeight + "px";
+        if (sections[i].classList.contains("home_sec"))
+            sections[i].style.minHeight = window.innerHeight + "px";
+        else sections[i].style.minHeight = sectionHeight + "px";
         // sections[i].style.height    = sectionHeight + "px";
     }
 }
@@ -219,6 +221,7 @@ var homeSection;
 
 var homeCanv;
 var homeCtx;
+var homeCanvUpdateInterval;
 
 var homeLastMX;
 var homeLastMY;
@@ -274,7 +277,8 @@ function initHomeCanv() {
     homeCtx.stokeStyle = "white";
     homeCtx.fillStyle = "blue";
 
-    setInterval(function () {
+    if (homeCanvUpdateInterval) clearInterval(homeCanvUpdateInterval);
+    homeCanvUpdateInterval = setInterval(function () {
         if (curMainDrawEls.length > 0) {
             curMainDrawEls.splice(0,Math.max(1,Math.round(Math.pow(curMainDrawEls.length,0.35))));
             updateMainCanv();
