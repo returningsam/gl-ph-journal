@@ -18,19 +18,6 @@ function getDist(x1,y1,x2,y2) {
     return Math.sqrt((a*a)+(b*b));
 }
 
-function randString(len) {
-    var str = "";
-    var exclude = [2483,7333,2181,7330,6575,2255,2258,2747,5887,11252,9857];
-    for (var i = 0; i < len; i++) {
-        var curCharCode = randInt(13,11500);
-        while (exclude.indexOf(curCharCode) > -1 || String.fromCharCode(curCharCode) == "⯴")
-            curCharCode = randInt(13,11500);
-        console.log(curCharCode);
-        str += String.fromCharCode(curCharCode);
-    }
-    return str;
-}
-
 function hexToRgb(hex) {
     var m = hex.match(/^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i);
     return [
@@ -214,14 +201,8 @@ function fixSectionHeights() {
     var sections = document.getElementsByTagName("section");
     sectionHeight = window.innerHeight*(17/20);
     for (var i = 0; i < sections.length; i++) {
-        if (sections[i].id == "home_sec") {
-            sections[i].style.minHeight = window.innerHeight + "px";
-            sections[i].style.height    = window.innerHeight + "px";
-        }
-        else {
-            sections[i].style.minHeight = sectionHeight + "px";
-            sections[i].style.height    = sectionHeight + "px";
-        }
+        sections[i].style.minHeight = sectionHeight + "px";
+        // sections[i].style.height    = sectionHeight + "px";
     }
 }
 
@@ -234,20 +215,28 @@ function initSections() {
 /******************************* HOME SECTION *********************************/
 /******************************************************************************/
 
-const HOME_TEXT = "-*!+~";
-
 var homeSection;
 
 var homeCanv;
 var homeCtx;
 
-var curDrawCharInd = 0;
-
 var homeLastMX;
 var homeLastMY;
 
+var curMainDrawEls = [];
+
 function clearHomeCanv() {
     homeCtx.clearRect(0,0,homeCanv.width,homeCanv.height);
+}
+
+function updateMainCanv() {
+    clearHomeCanv();
+    for (var i = 0; i < curMainDrawEls.length; i++) {
+        var curEl = curMainDrawEls[i];
+        homeCtx.font = curEl.font;
+        if (curEl.fill) homeCtx.fillText(curEl.ch,curEl.mx,curEl.my);
+        homeCtx.strokeText(curEl.ch,curEl.mx,curEl.my);
+    }
 }
 
 function homeCanvMouseMoveListener(ev) {
@@ -258,12 +247,16 @@ function homeCanvMouseMoveListener(ev) {
     if ((!homeLastMX || !homeLastMY) || dist > 5) {
         homeLastMX = mx;
         homeLastMY = my;
-        homeCtx.font = ((Math.pow(dist,1.2))*CANV_MULT_RATIO) + "px Roboto Mono";
+
         var curChar = randChar();
-        if (chance.bool({likelihood: 10}))
-            homeCtx.fillText(curChar,mx,my);
-        homeCtx.strokeText(curChar,mx,my);
-        curDrawCharInd = (curDrawCharInd+1)%HOME_TEXT.length;
+        var el = {
+            mx: mx,
+            my: my,
+            ch: curChar,
+            fill: chance.bool({likelihood: 10}),
+            font: ((Math.pow(dist,1.2))*CANV_MULT_RATIO) + "px Roboto Mono"
+        }
+        curMainDrawEls.push(el);
     }
 }
 
@@ -271,7 +264,7 @@ function initHomeCanv() {
     homeCanv = document.getElementById("homeCanv");
     homeCtx = homeCanv.getContext("2d");
 
-    homeCtx.clearRect(0,0,homeCanv.width,homeCanv.height);
+    clearHomeCanv()
 
     homeCanv.width  = homeSection.clientWidth  * CANV_MULT_RATIO;
     homeCanv.height = homeSection.clientHeight * CANV_MULT_RATIO;
@@ -280,6 +273,13 @@ function initHomeCanv() {
     homeCtx.textAlign = "center";
     homeCtx.stokeStyle = "white";
     homeCtx.fillStyle = "blue";
+
+    setInterval(function () {
+        if (curMainDrawEls.length > 0) {
+            curMainDrawEls.splice(0,Math.max(1,Math.round(Math.pow(curMainDrawEls.length,0.35))));
+            updateMainCanv();
+        }
+    }, 50);
 }
 
 function initHomeSection() {
@@ -294,20 +294,29 @@ function initHomeSection() {
 /******************************* ABOUT GL-PH SECTION **************************/
 /******************************************************************************/
 
-const ABOUT_TEXT = "This is some information about gl-ph. There will be more later!";
+const ABOUT_TEXT = "This organization is one of the first undergraduate-run literary journals in the nation (if not the first) dedicated exclusively to the publication of digital literature (otherwise known as electronic literature, or e-lit). It is directed and housed by the Rochester Institute of Technology (RIT).\n\nWhy \"gl-ph\"?\n\nWikipedia says that a glyph is “a hieroglyphic character or symbol; a pictograph.” We say that it’s the interface between text and icon, between code and image. In our name, the hyphen, in a way, is a wild card, the space inside square brackets, a space to inhabit in fluid and dynamic ways.";
 
 var nextAboutTextInd = 0;
+var lastAboutTextLen = 0;
+var aboutTypingNumExtra = 1;
 
 function handleAboutTyping(ev) {
     var inp = document.getElementById("about_input");
     if (inp.value.length < ABOUT_TEXT.length || ev.key == "Backspace" || ev.metaKey || ev.ctrlKey) {
+        if (ev.key.length == 1) document.getElementById("aboutBGLetter").innerHTML = ev.key;
         setTimeout(function () {
             var inp = document.getElementById("about_input");
             var len = inp.value.length;
+            if (len > 0 && lastAboutTextLen < len) len += randInt(0,aboutTypingNumExtra);
+            aboutTypingNumExtra += randInt(0,1);
+            lastAboutTextLen = len;
             inp.value = ABOUT_TEXT.slice(0,len);
         }, 100);
     }
-    else ev.preventDefault();
+    else {
+        ev.preventDefault();
+        aboutTypingNumExtra--;
+    }
 }
 
 function initAboutGLPH() {
@@ -316,129 +325,206 @@ function initAboutGLPH() {
 }
 
 /******************************************************************************/
+/******************************* DIG_LIT SECTION ******************************/
+/******************************************************************************/
+
+var startLetters;
+var digLitShown = false;
+var digLitAnimGradientSpread = 50;
+var digLitAnimInterval;
+
+var curDigAnimEl1 = 0;
+var curDigAnimEl2 = -40;
+
+var digLitOriginialContent;
+var digLitAnimElements;
+
+
+function digLitAnimStep() {
+    if (curDigAnimEl1 < digLitAnimElements.length) {
+        var el = digLitAnimElements[curDigAnimEl1];
+        el.style.color = "red";
+    }
+
+    if (curDigAnimEl2 > -1) {
+        var el = digLitAnimElements[curDigAnimEl2];
+        el.style.color = "black";
+        startLetters.style = null;
+        startLetters.className = "done";
+    }
+
+
+    curDigAnimEl1++;
+    curDigAnimEl2++;
+    if (curDigAnimEl2 >= digLitAnimElements.length) {
+        clearInterval(digLitAnimInterval);
+        setTimeout(finishDigLitAnim, 500);
+    }
+}
+
+function finishDigLitAnim() {
+    var digLitAnimSections = document.getElementsByClassName("digLitAnimSection");
+    for (var i = 0; i < digLitAnimSections.length; i++) {
+        digLitAnimSections[i].style.color = "black";
+        digLitAnimSections[i].innerHTML = digLitOriginialContent[i];
+        if (document.getElementById("digLitStartText")) document.getElementById("digLitStartText").id = null;
+    }
+}
+
+function startDigLitAnim() {
+    if (!digLitShown) {
+        digLitShown = true;
+        startLetters = document.getElementById("digLitStartText");
+        startLetters.style.textDecoration = "none";
+        digLitAnimElements = document.getElementsByClassName("digLitAnimElement");
+        digLitAnimElements = Array.prototype.slice.call(digLitAnimElements);
+        digLitAnimElements.sort(function (a,b) {
+            var sx = startLetters.offsetLeft;
+            var sy = startLetters.offsetTop;
+            return getDist(a.offsetLeft,a.offsetTop,sx,sy) - getDist(b.offsetLeft,b.offsetTop,sx,sy);
+        })
+        digLitAnimInterval = setInterval(digLitAnimStep, 10);
+    }
+}
+
+function initDigLitAnim() {
+    digLitOriginialContent = [];
+    var digLitAnimSections = document.getElementsByClassName("digLitAnimSection");
+    for (var i = 0; i < digLitAnimSections.length; i++) {
+        digLitOriginialContent.push(digLitAnimSections[i].innerHTML);
+        var secContentToks = digLitAnimSections[i].innerHTML.split(" ");
+        for (var j = 0; j < secContentToks.length; j++) {
+            if (secContentToks[j].startsWith("<span")) {
+                j++;
+                while (!secContentToks[j].endsWith("</span>")) j++;
+                continue;
+            }
+            secContentToks[j] = "<span class='digLitAnimElement'>" + secContentToks[j] + "</span>";
+        }
+        digLitAnimSections[i].innerHTML = secContentToks.join(" ");
+    }
+}
+
+function initDigLit() {
+    initDigLitAnim();
+    document.getElementById("digLitStartText").addEventListener("click",startDigLitAnim);
+}
+
+/******************************************************************************/
 /******************************* SUBMIT SECTION *******************************/
 /******************************************************************************/
 
-var updateSubmitMovePosInterval;
-var clickPointX;
-var clickPointY;
+const SUBMIT_ANIM_STEP_TIME = 200;
 
-var finalized = false;
+var numSubmitElements = 25;
+var centerSE = 13;
+var middleSE = [7,8,9,12,14,17,18,19];
+var outerSE  = [1,2,3,4,5,6,10,11,15,16,20,21,22,23,24,25];
+var submitButton;
+
+var submitAnimTimeout;
+var curSubmitStage;
+
+const SUBMIT_ANIM_STAGES = [
+    //outerSE        |middleSE
+    //color   stroke |color    stroke
+    ["blue", "blue", "blue",  "white"], // 0
+    ["blue", "white","blue",  "white"], // 1
+    ["blue", "white","white", "white"], // 2
+    ["white","white","white", "white"], // 3
+    ["white","white","white", "red"],   // 4
+    ["white","red",  "white", "red"],   // 5
+    ["red",  "red",  "red",   "red"],   // 6
+    ["white","red",  "white", "red"],   // 7
+];
+
+function updateOuterSE(color,stroke,func) {
+    var outerSEElements = document.getElementsByClassName("outerSE");
+    for (var i = 0; i < outerSEElements.length; i++) {
+        outerSEElements[i].style.color = color;
+        outerSEElements[i].style.textStroke = "1px " + stroke;
+        outerSEElements[i].style.webkitTextStroke = "1px " + stroke;
+        if (func) func(outerSEElements[i]);
+    }
+}
+
+function updateMiddleSE(color,stroke,func) {
+    var middleSEElements = document.getElementsByClassName("middleSE");
+    for (var i = 0; i < middleSEElements.length; i++) {
+        middleSEElements[i].style.color = color;
+        middleSEElements[i].style.textStroke = "1px " + stroke;
+        middleSEElements[i].style.webkitTextStroke = "1px " + stroke;
+        if (func) func(middleSEElements[i]);
+    }
+}
+
+function submitStageStep() {
+    submitButton.classList.remove("stage" + curSubmitStage);
+    curSubmitStage++;
+    submitButton.classList.add("stage" + curSubmitStage);
+    updateOuterSE(SUBMIT_ANIM_STAGES[curSubmitStage][0],SUBMIT_ANIM_STAGES[curSubmitStage][1]);
+    updateMiddleSE(SUBMIT_ANIM_STAGES[curSubmitStage][2],SUBMIT_ANIM_STAGES[curSubmitStage][3]);
+    if (curSubmitStage+1 == SUBMIT_ANIM_STAGES.length)
+        submitAnimTimeout = setTimeout(openSubmitLink, SUBMIT_ANIM_STEP_TIME);
+    else submitAnimTimeout = setTimeout(submitStageStep, SUBMIT_ANIM_STEP_TIME);
+}
+
+function submitClickHandler() {
+    curSubmitStage = 0;
+    submitButton.innerHTML = "HOLD";
+    submitButton.classList.add("stage" + curSubmitStage);
+    console.log(SUBMIT_ANIM_STAGES[curSubmitStage]);
+    updateOuterSE(SUBMIT_ANIM_STAGES[curSubmitStage][0],SUBMIT_ANIM_STAGES[curSubmitStage][1]);
+    updateMiddleSE(SUBMIT_ANIM_STAGES[curSubmitStage][2],SUBMIT_ANIM_STAGES[curSubmitStage][3]);
+    submitAnimTimeout = setTimeout(submitStageStep, SUBMIT_ANIM_STEP_TIME);
+}
+
+function submitCancelHandler() {
+    updateOuterSE( "blue","blue");
+    updateMiddleSE("blue","blue");
+    submitButton.innerHTML = "SUBMIT";
+    submitButton.className = "submitElement centerSE";
+    clearTimeout(submitAnimTimeout);
+}
 
 function openSubmitLink() {
-    window.open("https://www.lawctopus.com/wp-content/uploads/2017/10/submit-a-new-post.png","_self");
-    // submit link here ^
-}
-
-function finalizeSubmit() {
-    var drag = document.getElementById("drag");
-    var drop = document.getElementById("drop");
-    drag.removeEventListener("mousedown",submitMoveMouseDownHandler);
-    drag.removeEventListener("mouseup",submitMoveMouseUpHandler);
-    drag.removeEventListener("mouseout",submitMoveMouseUpHandler);
-    if (updateSubmitMovePosInterval) clearInterval(updateSubmitMovePosInterval);
-    drag.className = "submit_text active_submit";
-    drop.className = "submit_text";
-    drag.style.top  = drop.style.top;
-    drag.style.left = drop.style.left;
-    var thanksText = document.getElementById("thanks_text");
-    thanksText.style.display = "flex";
+    submitButton.innerHTML = "HOORAY";
     setTimeout(function () {
-        document.getElementById("drag").addEventListener("mousedown",openSubmitLink);
-    }, 10);
-
+        submitButton.innerHTML = "THANKS";
+        setTimeout(function () {
+            setTimeout(function () {
+                submitCancelHandler();
+            }, 10);
+            window.open("https://goo.gl/images/iK3BZK","_blank");
+        }, 300);
+    }, 300);
 }
 
-function getSubmitDist() {
-    var drag = document.getElementById('drag');
-    var drop = document.getElementById('drop');
-    dragY = drag.offsetTop  + (drag.clientHeight/2);
-    dragX = drag.offsetLeft + (drag.clientWidth/2);
-    dropY = drop.offsetTop  + (drop.clientHeight/2);
-    dropX = drop.offsetLeft + (drop.clientWidth/2);
-    return getDist(dragX,dragY,dropX,dropY);
-}
-
-function updateSubmitMovePos() {
-    var drag = document.getElementById("drag");
-    var scH = document.getElementById("section_scroll").scrollHeight;
-    var curX = mouseX - clickPointX;
-    var curY = mouseY - clickPointY
-    var dist = getSubmitDist();
-    var maxJitter = Math.pow(Math.max(dist,0),0.3);
-
-    var newTop  = Math.max(document.getElementById("submit_sec").offsetTop-37,Math.min(curY + randInt(-maxJitter,maxJitter),
-                document.getElementById("submit_sec").offsetTop + document.getElementById("submit_sec").clientHeight - drag.clientHeight + 30));
-    var newLeft = Math.max(-5,Math.min(curX + randInt(-maxJitter,maxJitter),
-                window.innerWidth - drag.clientWidth));
-    drag.style.top  = newTop  + "px";
-    drag.style.left = newLeft + "px";
-    if (dist < 10) {
-        finalized = true;
-        finalizeSubmit();
+function initSubmitElements() {
+    for (var i = 0; i < numSubmitElements; i++) {
+        var elID = i+1;
+        var submitElement = document.createElement("p");
+        submitElement.innerHTML = "SUBMIT";
+        submitElement.className = "submitElement";
+        if (elID == centerSE) {
+            submitElement.classList.add("centerSE");
+            submitElement.id = "centerSE";
+        }
+        else if (middleSE.indexOf(elID) > -1) {
+            submitElement.classList.add("middleSE");
+        }
+        else if (outerSE.indexOf(elID) > -1) {
+            submitElement.classList.add("outerSE");
+        }
+        document.getElementById("submit_sec").appendChild(submitElement);
     }
-}
-
-function submitMoveMouseDownHandler(ev) {
-    clickPointX = ev.clientX - ev.target.offsetLeft;
-    clickPointY = ev.clientY - ev.target.offsetTop;
-    document.getElementById("drop").className = "drop submit_text";
-    updateSubmitMovePosInterval = setInterval(updateSubmitMovePos, 10);
-}
-
-function submitMoveMouseUpHandler(ev) {
-    document.getElementById("drop").className = "submit_text";
-    placeSubmits();
-    if (updateSubmitMovePosInterval) clearInterval(updateSubmitMovePosInterval);
-}
-
-function resetDrag() {
-    var drag = document.getElementById("drag");
-    drag.addEventListener("mousedown",submitMoveMouseDownHandler);
-    drag.addEventListener("mouseup",submitMoveMouseUpHandler);
-    drag.addEventListener("mouseout",submitMoveMouseUpHandler);
-    drag.removeEventListener("click",openSubmitLink);
-    drag.className = "submit_text grab";
-    drag.style = null;
-    var pNode = document.getElementById("drag_home");
-    pNode.style = null;
-}
-
-function placeSubmits() {
-    var drag = document.getElementById("drag");
-    var texts = document.getElementsByClassName("submit_text");
-    var pNode = document.getElementById("drag_home");
-    var tnum = 1;
-    texts[tnum].style.left = (window.innerWidth/4) - (texts[tnum].clientWidth/2) + "px";
-    texts[tnum].style.top  = (pNode.offsetTop) + (sectionHeight/2) - (texts[tnum].clientHeight/2) + "px";
-    var tnum = 0;
-    pNode = texts[tnum].parentNode;
-    texts[tnum].style.left = (pNode.offsetLeft) + (window.innerWidth/4)  - (texts[tnum].clientWidth/2)  + "px";
-    texts[tnum].style.top  = (pNode.offsetTop)  + (sectionHeight/2) - (texts[tnum].clientHeight/2) + "px";
-}
-
-var curWindowWidth;
-var curWindowHeight;
-
-function resizeUpdateSubmitTexts() {
-    var drag = document.getElementById("drag");
-    var drop = document.getElementById("drop");
-
-    if (!finalized) {
-        resetDrag();
-        placeSubmits();
-        if (window.innerWidth/window.innerHeight < 1.12)
-            finalizeSubmit();
-    }
-    else finalizeSubmit();
 }
 
 function initSubmit() {
-    resetDrag();
-    placeSubmits();
-    if (window.innerWidth/window.innerHeight < 1.12)
-        finalizeSubmit();
-    resizeHandlers.push(resizeUpdateSubmitTexts);
+    initSubmitElements();
+    submitButton = document.getElementById("centerSE");
+    submitButton.addEventListener("mousedown",submitClickHandler);
+    submitButton.addEventListener("mouseup",submitCancelHandler);
 }
 
 /******************************************************************************/
@@ -518,9 +604,10 @@ function init() {
     initSections();
     initHomeSection();
     initAboutGLPH();
+    initDigLit();
     initSubmit();
-    setTimeout(endLoad, randInt(1000,2000));
-    // endLoad();
+    // setTimeout(endLoad, randInt(1000,2000));
+    endLoad();
 }
 
 window.onload = init;
