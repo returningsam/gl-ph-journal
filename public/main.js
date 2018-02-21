@@ -62,9 +62,7 @@ function updateMenuButtonPos(sID) {
 }
 
 function updateAllMenuButtons() {
-    for (var i = 0; i < sectIDs.length; i++) {
-        updateMenuButtonPos(sectIDs[i]);
-    }
+    for (var i = 0; i < sectIDs.length; i++) updateMenuButtonPos(sectIDs[i]);
 }
 
 function menuButtonClickHandler(ev) {
@@ -307,7 +305,7 @@ var aboutTypingNumExtra = 1;
 function handleAboutTyping(ev) {
     var inp = document.getElementById("about_input");
     if (inp.value.length < ABOUT_TEXT.length || ev.key == "Backspace" || ev.metaKey || ev.ctrlKey) {
-        if (ev.key.length == 1) document.getElementById("aboutBGLetter").innerHTML = ev.key;
+        if (ev.key.length == 1) document.getElementById("aboutBGLetter").innerHTML = ev.key.toUpperCase();
         setTimeout(function () {
             var inp = document.getElementById("about_input");
             var len = inp.value.length;
