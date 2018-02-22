@@ -317,13 +317,22 @@ function newHomeChar(x,y,dist) {
 }
 
 function updateMainCanv() {
-    clearHomeCanv();
-    for (var i = 0; i < curMainDrawEls.length; i++) {
-        var curEl = curMainDrawEls[i];
-        homeCtx.font = curEl.font;
-        if (curEl.fill) homeCtx.fillText(curEl.ch,curEl.x,curEl.y);
-        homeCtx.strokeText(curEl.ch,curEl.x,curEl.y);
+    if (curMainDrawEls.length > 20) {
+        if (curSpeed) {
+            if (chance.bool({likelihood:Math.max(0,Math.min(100,100-curSpeed))}))
+                curMainDrawEls.splice(0,Math.max(1,Math.round(Math.pow(curMainDrawEls.length,0.35))));
+        }
+        else
+            curMainDrawEls.splice(0,Math.max(1,Math.round(Math.pow(curMainDrawEls.length,0.35))));
+        clearHomeCanv();
+        for (var i = 0; i < curMainDrawEls.length; i++) {
+            var curEl = curMainDrawEls[i];
+            homeCtx.font = curEl.font;
+            if (curEl.fill) homeCtx.fillText(curEl.ch,curEl.x,curEl.y);
+            homeCtx.strokeText(curEl.ch,curEl.x,curEl.y);
+        }
     }
+    window.requestAnimationFrame(updateMainCanv);
 }
 
 function homeCanvMouseMoveListener(ev) {
@@ -346,10 +355,8 @@ function homeCanvMouseMoveListener(ev) {
         curMainDrawEls.push(el);
     }
 
-    homeDrawTimeout = setTimeout(function () {
-        homeAutoDraw = true;
-        homeDrawStep();
-    }, 100);
+    homeAutoDraw = true;
+    window.requestAnimationFrame(homeDrawStep);
 }
 
 function initHomeCanv() {
@@ -367,18 +374,7 @@ function initHomeCanv() {
     homeCtx.fillStyle = "blue";
 
     if (homeCanvUpdateInterval) clearInterval(homeCanvUpdateInterval);
-    homeCanvUpdateInterval = setInterval(function () {
-        if (curMainDrawEls.length > 20) {
-            if (curSpeed) {
-                if (chance.bool({likelihood:Math.max(0,Math.min(100,100-curSpeed))}))
-                    curMainDrawEls.splice(0,Math.max(1,Math.round(Math.pow(curMainDrawEls.length,0.35))));
-            }
-            else {
-                curMainDrawEls.splice(0,Math.max(1,Math.round(Math.pow(curMainDrawEls.length,0.35))));
-            }
-            updateMainCanv();
-        }
-    }, 50);
+    window.requestAnimationFrame(updateMainCanv);
 }
 
 function initHomeSection() {
