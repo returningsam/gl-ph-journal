@@ -170,14 +170,16 @@ function isScrolledIntoView(el) {
 }
 
 function updateTitleSkews() {
-    if (!scrolling) {
-        var titles = document.getElementsByClassName("sec_title");
-        for (var i = 0; i < titles.length; i++)
-            titles[i].style.transform = "skew(0, " + curTitleSkew + "deg)";
-        if (curTitleSkew != 0)
-            curTitleSkew -= (curTitleSkew/Math.abs(curTitleSkew)) *
-                            Math.min(0.5,Math.abs(curTitleSkew));
-    }
+    window.requestAnimationFrame(function () {
+        if (!scrolling) {
+            var titles = document.getElementsByClassName("sec_title");
+            for (var i = 0; i < titles.length; i++)
+                titles[i].style.transform = "skew(0, " + curTitleSkew + "deg)";
+            if (curTitleSkew != 0)
+                curTitleSkew -= (curTitleSkew/Math.abs(curTitleSkew)) *
+                                Math.min(0.5,Math.abs(curTitleSkew));
+        }
+    });
 }
 
 function sectionScrollHandler(ev) {
@@ -306,12 +308,13 @@ function clearHomeCanv() {
 
 function newHomeChar(x,y,dist) {
     var curChar = randChar();
+    var size = Math.min(350,Math.pow(dist,1.3))*CANV_MULT_RATIO;
     var el = {
         x: x,
         y: y,
         ch: curChar,
         fill: chance.bool({likelihood: 10}),
-        font: ((Math.pow(dist,1.3))*CANV_MULT_RATIO) + "px Roboto Mono"
+        font: size + "px Roboto Mono"
     }
     return el;
 }
@@ -443,25 +446,27 @@ var digLitAnimElements;
 
 
 function digLitAnimStep() {
-    if (curDigAnimEl1 < digLitAnimElements.length) {
-        var el = digLitAnimElements[curDigAnimEl1];
-        el.style.color = "red";
-    }
+    window.requestAnimationFrame(function () {
+        if (curDigAnimEl1 < digLitAnimElements.length) {
+            var el = digLitAnimElements[curDigAnimEl1];
+            el.style.color = "red";
+        }
 
-    if (curDigAnimEl2 > -1) {
-        var el = digLitAnimElements[curDigAnimEl2];
-        el.style.color = "black";
-        startLetters.style = null;
-        startLetters.className = "done";
-    }
+        if (curDigAnimEl2 > -1) {
+            var el = digLitAnimElements[curDigAnimEl2];
+            el.style.color = "black";
+            startLetters.style = null;
+            startLetters.className = "done";
+        }
 
 
-    curDigAnimEl1++;
-    curDigAnimEl2++;
-    if (curDigAnimEl2 >= digLitAnimElements.length) {
-        clearInterval(digLitAnimInterval);
-        setTimeout(finishDigLitAnim, 500);
-    }
+        curDigAnimEl1++;
+        curDigAnimEl2++;
+        if (curDigAnimEl2 >= digLitAnimElements.length) {
+            clearInterval(digLitAnimInterval);
+            setTimeout(finishDigLitAnim, 500);
+        }
+    });
 }
 
 function finishDigLitAnim() {
@@ -484,8 +489,8 @@ function startDigLitAnim() {
             var sx = startLetters.offsetLeft;
             var sy = startLetters.offsetTop;
             return getDist(a.offsetLeft,a.offsetTop,sx,sy) - getDist(b.offsetLeft,b.offsetTop,sx,sy);
-        })
-        digLitAnimInterval = setInterval(digLitAnimStep, 10);
+        });
+        digLitAnimInterval = setInterval(digLitAnimStep, 1);
     }
 }
 
