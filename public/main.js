@@ -31,7 +31,14 @@ function hexToRgb(hex) {
  * Returns a random integer between min (inclusive) and max (inclusive)
  */
 function randInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return chance.integer({min:min,max:max});
+}
+
+/**
+ * Returns a random float between min (inclusive) and max (inclusive)
+ */
+function randFloat(min, max) {
+    return chance.floating({min:min,max:max});
 }
 
 function randChar() {
@@ -42,6 +49,14 @@ function randChar() {
         ch = String.fromCharCode(n);
     }
     return ch;
+}
+
+function elementScrolledIntoView(el) {
+    var box = el.getBoundingClientRect();
+    var top = box.y;
+    var height = box.height;
+
+    return (top + height > 0) && (top < window.innerHeight);
 }
 
 /******************************************************************************/
@@ -62,6 +77,7 @@ function updateMenuButtonPos(sID) {
 }
 
 function updateAllMenuButtons() {
+    menuCharWidth = document.getElementById("home_mb").clientWidth;
     for (var i = 0; i < sectIDs.length; i++) updateMenuButtonPos(sectIDs[i]);
 }
 
@@ -189,6 +205,13 @@ function sectionScrollHandler(ev) {
     if (!updateTitleSkewsInterval)
         updateTitleSkewsInterval = setInterval(updateTitleSkews, 10);
 
+    if (elementScrolledIntoView(document.getElementById("home_sec")) && !homeAutoDraw)
+        startHomeDraw();
+    else if (!elementScrolledIntoView(document.getElementById("home_sec"))) {
+        homeAutoDraw = false;
+        clearInterval(homeDrawTimeout);
+    }
+
     setTimeout(function () {
         scrolling = false;
     }, 10);
@@ -212,6 +235,57 @@ function initSections() {
 }
 
 /******************************************************************************/
+/******************************* HOME SECTION DRAWER **************************/
+/******************************************************************************/
+
+const MAX_HOME_DRAW_SPEED = 50;
+const MAX_HOME_DRAW_VECT = 50;
+const MAX_HOME_DRAW_VECT_CHANGE = 10;
+const HOME_DRAW_BOUND_PERC = 4;
+
+var homeAutoDraw;
+
+var homeDrawTimeout;
+var curVect;
+var curPos;
+var curSpeed = 10;
+
+function homeDrawStep() {
+    // console.log("homeDrawStep");
+    var steerXL = Math.max(0,Math.min(1, (curPos[0]/(homeCanv.width/HOME_DRAW_BOUND_PERC))));
+    var steerXR = Math.max(0,Math.min(1, (Math.abs(homeCanv.width - curPos[0])/(homeCanv.width/HOME_DRAW_BOUND_PERC))));
+    var steerYT = Math.max(0,Math.min(1, (curPos[1]/(homeCanv.height/HOME_DRAW_BOUND_PERC))));
+    var steerYB = Math.max(0,Math.min(1, (Math.abs(homeCanv.height - curPos[1])/(homeCanv.height/HOME_DRAW_BOUND_PERC))));
+
+    // console.log(steerXL.toFixed(2),steerXR.toFixed(2),steerYT.toFixed(2),steerYB.toFixed(2));
+
+    curVect[0] = Math.max(-MAX_HOME_DRAW_VECT,Math.min(MAX_HOME_DRAW_VECT,curVect[0] +
+                  randFloat(-MAX_HOME_DRAW_VECT_CHANGE*steerXL,MAX_HOME_DRAW_VECT_CHANGE*steerXR)));
+    curVect[1] = Math.max(-MAX_HOME_DRAW_VECT,Math.min(MAX_HOME_DRAW_VECT,curVect[1] +
+                  randFloat(-MAX_HOME_DRAW_VECT_CHANGE*steerYT,MAX_HOME_DRAW_VECT_CHANGE*steerYB)));
+
+    var dist = Math.pow((curVect[0] * curVect[0]) + (curVect[1] * curVect[1]),0.5);
+
+    curPos[0] = Math.max(0,Math.min(homeCanv.width, curPos[0] + curVect[0]));
+    curPos[1] = Math.max(0,Math.min(homeCanv.height,curPos[1] + curVect[1]));
+
+    var el = newHomeChar(curPos[0],curPos[1],dist);
+    // console.log(el);
+    curMainDrawEls.push(el);
+
+    curSpeed = Math.min(MAX_HOME_DRAW_SPEED,Math.max(0,curSpeed + randFloat(-5,5)));
+    if (homeAutoDraw) homeDrawTimeout = setTimeout(homeDrawStep, curSpeed);
+}
+
+function startHomeDraw() {
+    curVect  = [randFloat(-20,20),randFloat(-20,20)];
+    curPos   = [homeCanv.width/2,homeCanv.height/2];
+    homeAutoDraw = true;
+    if (homeDrawTimeout) clearInterval(homeDrawTimeout);
+    homeDrawTimeout = setTimeout(homeDrawStep, curSpeed);
+}
+
+/******************************************************************************/
 /******************************* HOME SECTION *********************************/
 /******************************************************************************/
 
@@ -230,35 +304,52 @@ function clearHomeCanv() {
     homeCtx.clearRect(0,0,homeCanv.width,homeCanv.height);
 }
 
+function newHomeChar(x,y,dist) {
+    var curChar = randChar();
+    var el = {
+        x: x,
+        y: y,
+        ch: curChar,
+        fill: chance.bool({likelihood: 10}),
+        font: ((Math.pow(dist,1.3))*CANV_MULT_RATIO) + "px Roboto Mono"
+    }
+    return el;
+}
+
 function updateMainCanv() {
     clearHomeCanv();
     for (var i = 0; i < curMainDrawEls.length; i++) {
         var curEl = curMainDrawEls[i];
         homeCtx.font = curEl.font;
-        if (curEl.fill) homeCtx.fillText(curEl.ch,curEl.mx,curEl.my);
-        homeCtx.strokeText(curEl.ch,curEl.mx,curEl.my);
+        if (curEl.fill) homeCtx.fillText(curEl.ch,curEl.x,curEl.y);
+        homeCtx.strokeText(curEl.ch,curEl.x,curEl.y);
     }
 }
 
 function homeCanvMouseMoveListener(ev) {
+    homeAutoDraw = false;
+    if (homeDrawTimeout) clearTimeout(homeDrawTimeout);
     var mx = ev.clientX * CANV_MULT_RATIO;
     var my = (ev.clientY + document.getElementsByTagName("main")[0].scrollTop) * CANV_MULT_RATIO;
 
+    curPos[0]  = mx;
+    curPos[1]  = my;
+    curVect[0] = mx - homeLastMX;
+    curVect[1] = my - homeLastMY;
+
     var dist = getDist(homeLastMX,homeLastMY,mx,my);
+    curSpeed = dist;
     if ((!homeLastMX || !homeLastMY) || dist > 5) {
         homeLastMX = mx;
         homeLastMY = my;
-
-        var curChar = randChar();
-        var el = {
-            mx: mx,
-            my: my,
-            ch: curChar,
-            fill: chance.bool({likelihood: 10}),
-            font: ((Math.pow(dist,1.2))*CANV_MULT_RATIO) + "px Roboto Mono"
-        }
+        var el = newHomeChar(mx,my,dist)
         curMainDrawEls.push(el);
     }
+
+    homeDrawTimeout = setTimeout(function () {
+        homeAutoDraw = true;
+        homeDrawStep();
+    }, 100);
 }
 
 function initHomeCanv() {
@@ -277,8 +368,14 @@ function initHomeCanv() {
 
     if (homeCanvUpdateInterval) clearInterval(homeCanvUpdateInterval);
     homeCanvUpdateInterval = setInterval(function () {
-        if (curMainDrawEls.length > 0) {
-            curMainDrawEls.splice(0,Math.max(1,Math.round(Math.pow(curMainDrawEls.length,0.35))));
+        if (curMainDrawEls.length > 20) {
+            if (curSpeed) {
+                if (chance.bool({likelihood:Math.max(0,Math.min(100,100-curSpeed))}))
+                    curMainDrawEls.splice(0,Math.max(1,Math.round(Math.pow(curMainDrawEls.length,0.35))));
+            }
+            else {
+                curMainDrawEls.splice(0,Math.max(1,Math.round(Math.pow(curMainDrawEls.length,0.35))));
+            }
             updateMainCanv();
         }
     }, 50);
@@ -290,6 +387,10 @@ function initHomeSection() {
     homeCanv.addEventListener("mousemove",homeCanvMouseMoveListener);
     homeCanv.addEventListener("click",clearHomeCanv);
     resizeHandlers.push(initHomeCanv);
+    startHomeDraw();
+    setTimeout(function () {
+        homeCanv.style.opacity = 1;
+    }, 2000);
 }
 
 /******************************************************************************/
