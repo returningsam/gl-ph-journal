@@ -317,22 +317,23 @@ function newHomeChar(x,y,dist) {
 }
 
 function updateMainCanv() {
-    if (curMainDrawEls.length > 20) {
-        if (curSpeed) {
-            if (chance.bool({likelihood:Math.max(0,Math.min(100,100-curSpeed))}))
+    window.requestAnimationFrame(function functionName() {
+        if (curMainDrawEls.length > 20) {
+            if (curSpeed) {
+                if (chance.bool({likelihood:Math.max(0,Math.min(100,100-curSpeed))}))
+                    curMainDrawEls.splice(0,Math.max(1,Math.round(Math.pow(curMainDrawEls.length,0.35))));
+            }
+            else
                 curMainDrawEls.splice(0,Math.max(1,Math.round(Math.pow(curMainDrawEls.length,0.35))));
+            clearHomeCanv();
+            for (var i = 0; i < curMainDrawEls.length; i++) {
+                var curEl = curMainDrawEls[i];
+                homeCtx.font = curEl.font;
+                if (curEl.fill) homeCtx.fillText(curEl.ch,curEl.x,curEl.y);
+                homeCtx.strokeText(curEl.ch,curEl.x,curEl.y);
+            }
         }
-        else
-            curMainDrawEls.splice(0,Math.max(1,Math.round(Math.pow(curMainDrawEls.length,0.35))));
-        clearHomeCanv();
-        for (var i = 0; i < curMainDrawEls.length; i++) {
-            var curEl = curMainDrawEls[i];
-            homeCtx.font = curEl.font;
-            if (curEl.fill) homeCtx.fillText(curEl.ch,curEl.x,curEl.y);
-            homeCtx.strokeText(curEl.ch,curEl.x,curEl.y);
-        }
-    }
-    window.requestAnimationFrame(updateMainCanv);
+    });
 }
 
 function homeCanvMouseMoveListener(ev) {
@@ -355,8 +356,10 @@ function homeCanvMouseMoveListener(ev) {
         curMainDrawEls.push(el);
     }
 
-    homeAutoDraw = true;
-    window.requestAnimationFrame(homeDrawStep);
+    homeDrawTimeout = setTimeout(function () {
+        homeAutoDraw = true;
+        homeDrawStep();
+    }, 100);
 }
 
 function initHomeCanv() {
@@ -374,7 +377,7 @@ function initHomeCanv() {
     homeCtx.fillStyle = "blue";
 
     if (homeCanvUpdateInterval) clearInterval(homeCanvUpdateInterval);
-    window.requestAnimationFrame(updateMainCanv);
+    homeCanvUpdateInterval = setInterval(updateMainCanv, 50);
 }
 
 function initHomeSection() {
