@@ -462,7 +462,6 @@ textarea {
 
 .faq_sec {
     width: calc(100% - 120px);
-    margin: 20px;
     padding: 0 60px;
     display: flex;
     flex-direction: row;
