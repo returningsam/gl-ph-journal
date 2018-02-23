@@ -295,6 +295,8 @@ textarea {
 
 #digLitStartText:hover {
     cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: wavy;
 }
 
 #digLitStartText.done {
@@ -317,6 +319,18 @@ textarea {
     flex-wrap: wrap;
     justify-content: space-around;
     background-color: blue !important;
+}
+
+.submit_sec.mobile {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.submit_sec.mobile p {
+    color: white;
+    font-size: 4vh;
+    padding: 50px;
 }
 
 .submitElement {
