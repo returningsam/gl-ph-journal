@@ -737,8 +737,8 @@ function init() {
     initAboutGLPH();
     initDigLit();
     initSubmit();
-    setTimeout(endLoad, randInt(1000,2000));
-    // endLoad();
+    // setTimeout(endLoad, randInt(1000,2000));
+    endLoad();
 }
 
 window.onload = init;
