@@ -658,6 +658,65 @@ function initSubmit() {
 }
 
 /******************************************************************************/
+/******************************* FAQ SECTION **********************************/
+/******************************************************************************/
+var numQuestions = 5;
+var questions = [
+    [["When ", "We "], "will ", ["you be open for ", "open our first "], "submission", ["s?", " window in March 2018"]],
+    [["I’m still not sure if my ", "You can submit your ideas and find out, or you can contact us in advance. The boundaries of what "], "work counts as digital literature", [". How do I know?", " are contested. You can submit your ", " are contested."]]
+];
+var currHover;
+
+function initFAQQuestions() {
+    for (var i = 0; i < questions.length; i++) {
+        var questionEle = document.createElement("p");
+        questionEle.id = "question_" + i;
+        questionEle.innerHTML = retrieveQuestionText(i, true);
+        questionEle.addEventListener("mouseover", showFAQAnswers);
+        questionEle.addEventListener("mouseleave", showFAQQuestions);
+        document.getElementById("faq_sec").appendChild(questionEle);
+    }
+
+}
+
+function retrieveQuestionText(i, qora) {
+    var finalStr = "";
+    for (var j = 0; j < questions[i].length; j++) {
+        if(Array.isArray(questions[i][j])){
+            if(qora == true)
+                finalStr += questions[i][j][0];
+            else {
+                finalStr += questions[i][j][1];
+            }
+        }
+        else
+            finalStr += questions[i][j];
+    }
+    return finalStr;
+}
+
+function showFAQQuestions(ev) {
+    var questions = ev.target.id;
+    var id = parseInt(questions.charAt(questions.length-1));
+    ev.target.innerHTML = retrieveQuestionText(id, true);
+    console.log(retrieveQuestionText(id, true));
+
+}
+
+function showFAQAnswers(ev) {
+    var questions = ev.target.id;
+    var id = parseInt(questions.charAt(questions.length-1));
+    ev.target.innerHTML = retrieveQuestionText(id, false);
+    console.log(retrieveQuestionText(id, false));
+}
+
+function initFAQ() {
+    initFAQQuestions();
+    var questionOne = document.getElementById('question_1');
+}
+
+
+/******************************************************************************/
 /******************************* LOADING **************************************/
 /******************************************************************************/
 
@@ -737,8 +796,9 @@ function init() {
     initAboutGLPH();
     initDigLit();
     initSubmit();
-    setTimeout(endLoad, randInt(1000,2000));
-    // endLoad();
+    initFAQ();
+    //setTimeout(endLoad, randInt(1000,2000));
+    endLoad();
 }
 
 window.onload = init;

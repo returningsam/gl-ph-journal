@@ -463,7 +463,9 @@ textarea {
     width: calc(100% - 120px);
     padding: 0 60px;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+.faq_sec p {
+    margin-bottom: 20px;
 }
