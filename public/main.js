@@ -542,7 +542,7 @@ function initDigLit() {
 
 const SUBMIT_ANIM_STEP_TIME = 200;
 
-var numSubmitElements = 25;
+var numsubmitEls = 25;
 var centerSE = 13;
 var middleSE = [7,8,9,12,14,17,18,19];
 var outerSE  = [1,2,3,4,5,6,10,11,15,16,20,21,22,23,24,25];
@@ -609,7 +609,7 @@ function submitCancelHandler() {
     updateOuterSE( "blue","blue");
     updateMiddleSE("blue","blue");
     submitButton.innerHTML = "SUBMIT";
-    submitButton.className = "submitElement centerSE";
+    submitButton.className = "submitEl centerSE";
     clearTimeout(submitAnimTimeout);
 }
 
@@ -626,23 +626,23 @@ function openSubmitLink() {
     }, 300);
 }
 
-function initSubmitElements() {
-    for (var i = 0; i < numSubmitElements; i++) {
+function initsubmitEls() {
+    for (var i = 0; i < numsubmitEls; i++) {
         var elID = i+1;
-        var submitElement = document.createElement("p");
-        submitElement.innerHTML = "SUBMIT";
-        submitElement.className = "submitElement";
+        var submitEl = document.createElement("p");
+        submitEl.innerHTML = "SUBMIT";
+        submitEl.className = "submitElement";
         if (elID == centerSE) {
-            submitElement.classList.add("centerSE");
-            submitElement.id = "centerSE";
+            submitEl.classList.add("centerSE");
+            submitEl.id = "centerSE";
         }
         else if (middleSE.indexOf(elID) > -1) {
-            submitElement.classList.add("middleSE");
+            submitEl.classList.add("middleSE");
         }
         else if (outerSE.indexOf(elID) > -1) {
-            submitElement.classList.add("outerSE");
+            submitEl.classList.add("outerSE");
         }
-        document.getElementById("submit_sec").appendChild(submitElement);
+        document.getElementById("submit_sec").appendChild(submitEl);
     }
 }
 
@@ -650,7 +650,7 @@ function initSubmit() {
     if (!isMobile) {
         document.getElementById("submit_sec").classList.remove("mobile");
         document.getElementById("submit_sec").innerHTML = null;
-        initSubmitElements();
+        initsubmitEls();
         submitButton = document.getElementById("centerSE");
         submitButton.addEventListener("mousedown",submitClickHandler);
         submitButton.addEventListener("mouseup",submitCancelHandler);
