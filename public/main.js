@@ -406,7 +406,6 @@ function initHomeSection() {
     homeSection = document.getElementById("home_sec");
     initHomeCanv();
     homeCanv.addEventListener("mousemove",homeCanvMouseMoveListener);
-    homeCanv.addEventListener("click",clearHomeCanv);
     resizeHandlers.push(initHomeCanv);
     startHomeDraw();
     setTimeout(function () {
@@ -599,7 +598,6 @@ function submitClickHandler() {
     curSubmitStage = 0;
     submitButton.innerHTML = "HOLD";
     submitButton.classList.add("stage" + curSubmitStage);
-    console.log(SUBMIT_ANIM_STAGES[curSubmitStage]);
     updateOuterSE(SUBMIT_ANIM_STAGES[curSubmitStage][0],SUBMIT_ANIM_STAGES[curSubmitStage][1]);
     updateMiddleSE(SUBMIT_ANIM_STAGES[curSubmitStage][2],SUBMIT_ANIM_STAGES[curSubmitStage][3]);
     submitAnimTimeout = setTimeout(submitStageStep, SUBMIT_ANIM_STEP_TIME);
@@ -656,6 +654,121 @@ function initSubmit() {
         submitButton.addEventListener("mouseup",submitCancelHandler);
     }
 }
+
+/******************************************************************************/
+/******************************* FAQ SECTION **********************************/
+/******************************************************************************/
+
+const FAQ_ANIM_STEP = 0.05;
+const FAQ_ANIM_STEP_TIME = 30;
+
+var questions = [
+    [["When ", "We "], "will ", ["you be open for ", "open our first "], "submission", ["s?", " window in March 2018"]],
+    [["I’m still not sure if my ", "You can submit your ideas and find out, or you can contact us in advance. The boundaries of what "], "work counts as digital literature", [". How do I know?", " are contested."]],
+    [["When ", "We "], "will ", ["you be open for ", "open our first "], "submission", ["s?", " window in March 2018"]],
+    [["I’m still not sure if my ", "You can submit your ideas and find out, or you can contact us in advance. The boundaries of what "], "work counts as digital literature", [". How do I know?", " are contested."]],
+    [["When ", "We "], "will ", ["you be open for ", "open our first "], "submission", ["s?", " window in March 2018"]],
+    [["I’m still not sure if my ", "You can submit your ideas and find out, or you can contact us in advance. The boundaries of what "], "work counts as digital literature", [". How do I know?", " are contested."]],
+    [["When ", "We "], "will ", ["you be open for ", "open our first "], "submission", ["s?", " window in March 2018"]],
+    [["I’m still not sure if my ", "You can submit your ideas and find out, or you can contact us in advance. The boundaries of what "], "work counts as digital literature", [". How do I know?", " are contested."]]
+];
+
+function initFAQQuestions() {
+    var faqClasses = ["faqElLeft","faqElRight"];
+    var curClass = 0;
+    for (var i = 0; i < questions.length; i++) {
+        var questionEle = document.createElement("p");
+        questionEle.id = "question_" + i;
+        questionEle.className = faqClasses[curClass];
+        questionEle.innerHTML = retrieveQuestionText(i, true, 1);
+        questionEle.addEventListener("mouseover", showFAQAnswers);
+        questionEle.addEventListener("mouseleave", showFAQQuestions);
+        document.getElementById("faq_sec").appendChild(questionEle);
+        curClass = (curClass+1)%2;
+    }
+
+}
+
+function retrieveQuestionText(qInd, qora, perc) {
+    var finalStr = "";
+    for (var j = 0; j < questions[qInd].length; j++) {
+        if (Array.isArray(questions[qInd][j])) {
+            var shownText;
+            var hiddenText;
+            if (qora == true) {
+                shownText  = questions[qInd][j][0];
+                hiddenText = questions[qInd][j][1];
+            }
+            else {
+                shownText  = questions[qInd][j][1];
+                hiddenText = questions[qInd][j][0];
+            }
+
+            var tokLen;
+            if (shownText.length > hiddenText.length)
+                tokLen = hiddenText.length + ((shownText.length - hiddenText.length)*perc);
+            else {
+                tokLen = hiddenText.length - ((hiddenText.length - shownText.length)*perc);
+            }
+            tokLen = Math.round(tokLen);
+            for (var i = 0; i < tokLen; i++) {
+                if (chance.bool({likelihood: perc*100})) {
+                    if (i < shownText.length) finalStr += shownText[i];
+                    else finalStr += randChar();
+                }
+                else {
+                    if (i < hiddenText.length) finalStr += hiddenText[i];
+                    else finalStr += randChar();
+                }
+            }
+        }
+        else
+            finalStr += questions[qInd][j];
+    }
+    return finalStr;
+}
+
+function showFAQQuestions(ev) {
+    var qEl = ev.target;
+    var questions = qEl.id;
+    var id = parseInt(questions.charAt(questions.length-1));
+    showFAQQuestionsStep(qEl,id,0);
+}
+
+function showFAQQuestionsStep(qEl,id,perc) {
+    perc += FAQ_ANIM_STEP;
+    qEl.innerHTML = retrieveQuestionText(id, true, perc);
+    perc = parseFloat(perc.toFixed(2));
+    if (perc < 1) {
+        setTimeout(function () {
+            showFAQQuestionsStep(qEl,id,perc);
+        }, FAQ_ANIM_STEP_TIME);
+    }
+}
+
+function showFAQAnswers(ev) {
+    var qEl = ev.target;
+    var questions = qEl.id;
+    var id = parseInt(questions.charAt(questions.length-1));
+    showFAQAnswersStep(qEl,id,0);
+}
+
+function showFAQAnswersStep(qEl,id,perc) {
+    perc += FAQ_ANIM_STEP;
+    qEl.innerHTML = retrieveQuestionText(id, false, perc);
+    perc = parseFloat(perc.toFixed(2));
+    if (perc < 1) {
+        setTimeout(function () {
+            showFAQAnswersStep(qEl,id,perc);
+        }, FAQ_ANIM_STEP_TIME);
+    }
+}
+
+function initFAQ() {
+    initFAQQuestions();
+    var questionOne = document.getElementById('question_1');
+}
+
 
 /******************************************************************************/
 /******************************* LOADING **************************************/
@@ -717,7 +830,6 @@ function resize() {
     if (resizeTimeout) clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(function () {
         for (var i = 0; i < resizeHandlers.length; i++) {
-            console.log(resizeHandlers[i]);
             resizeHandlers[i]();
         }
     }, 100);
@@ -737,7 +849,8 @@ function init() {
     initAboutGLPH();
     initDigLit();
     initSubmit();
-    // setTimeout(endLoad, randInt(1000,2000));
+    initFAQ();
+    //setTimeout(endLoad, randInt(1000,2000));
     endLoad();
 }
 

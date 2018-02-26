@@ -156,7 +156,7 @@ section.light {
     font-size: var(--subhead-text-size);
 }
 
-.sec_title p {
+.sec_title h2 {
     -ms-transform:     skew(0,-0deg);
     -moz-transform:    skew(0,-0deg);
     -webkit-transform: skew(0,-0deg);
@@ -182,6 +182,18 @@ section.light {
     z-index: 0;
     opacity: 0;
     transition: opacity 2s;
+}
+
+.home_sec p {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+    width: 100%;
+    font-size: var(--body-text-size);
 }
 
 /******************************************************************************/
@@ -464,7 +476,76 @@ textarea {
     width: calc(100% - 120px);
     padding: 0 60px;
     display: flex;
+    flex-direction: column;
+}
+
+#faq_title {
+    padding-bottom: 60px;
+}
+
+.faqElLeft {
+    display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding: 20px 0;
+    font-size: var(--body-text-size);
+    font-weight: normal;
+    min-height: calc(6 * var(--body-text-size));
+    position: relative;
+    z-index: 1;
+    padding-left: calc(3 * var(--subhead-text-size));
+}
+
+.faqElLeft::after {
+    content: "Q";
+    position: absolute;
+    left: 0;
+    top: 0;
+    line-height: calc(3 * var(--subhead-text-size));
+
+    color: white;
+    text-stroke: 1px black;
+    -webkit-text-stroke: 1px black;
+    font-size: calc(3 * var(--subhead-text-size));
+    z-index: -1;
+    transition: content 0.3s;
+}
+
+.faqElLeft:hover::after {
+    content: "A";
+    color: blue;
+}
+
+.faqElRight {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding: 20px 0;
+    font-size: var(--body-text-size);
+    font-weight: normal;
+    min-height: calc(6 * var(--body-text-size));
+    position: relative;
+    z-index: 1;
+    padding-right: calc(3 * var(--subhead-text-size));
+}
+
+.faqElRight::after {
+    content: "Q";
+    position: absolute;
+    right: 0;
+    top: 0;
+    line-height: calc(3 * var(--subhead-text-size));
+
+    color: white;
+    text-stroke: 1px black;
+    -webkit-text-stroke: 1px black;
+    font-size: calc(3 * var(--subhead-text-size));
+    z-index: -1;
+    transition: color 0.3s;
+}
+
+.faqElRight:hover::after {
+    content: "A";
+    color: blue;
+    transition: color 0.3s;
 }
