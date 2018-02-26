@@ -541,7 +541,7 @@ function initDigLit() {
 
 const SUBMIT_ANIM_STEP_TIME = 200;
 
-var numsubmitEls = 25;
+var numSubmitElements = 25;
 var centerSE = 13;
 var middleSE = [7,8,9,12,14,17,18,19];
 var outerSE  = [1,2,3,4,5,6,10,11,15,16,20,21,22,23,24,25];
@@ -607,7 +607,7 @@ function submitCancelHandler() {
     updateOuterSE( "blue","blue");
     updateMiddleSE("blue","blue");
     submitButton.innerHTML = "SUBMIT";
-    submitButton.className = "submitEl centerSE";
+    submitButton.className = "submitElement centerSE";
     clearTimeout(submitAnimTimeout);
 }
 
@@ -624,23 +624,23 @@ function openSubmitLink() {
     }, 300);
 }
 
-function initsubmitEls() {
-    for (var i = 0; i < numsubmitEls; i++) {
+function initSubmitElements() {
+    for (var i = 0; i < numSubmitElements; i++) {
         var elID = i+1;
-        var submitEl = document.createElement("p");
-        submitEl.innerHTML = "SUBMIT";
-        submitEl.className = "submitElement";
+        var submitElement = document.createElement("p");
+        submitElement.innerHTML = "SUBMIT";
+        submitElement.className = "submitElement";
         if (elID == centerSE) {
-            submitEl.classList.add("centerSE");
-            submitEl.id = "centerSE";
+            submitElement.classList.add("centerSE");
+            submitElement.id = "centerSE";
         }
         else if (middleSE.indexOf(elID) > -1) {
-            submitEl.classList.add("middleSE");
+            submitElement.classList.add("middleSE");
         }
         else if (outerSE.indexOf(elID) > -1) {
-            submitEl.classList.add("outerSE");
+            submitElement.classList.add("outerSE");
         }
-        document.getElementById("submit_sec").appendChild(submitEl);
+        document.getElementById("submit_sec").appendChild(submitElement);
     }
 }
 
@@ -648,7 +648,7 @@ function initSubmit() {
     if (!isMobile) {
         document.getElementById("submit_sec").classList.remove("mobile");
         document.getElementById("submit_sec").innerHTML = null;
-        initsubmitEls();
+        initSubmitElements();
         submitButton = document.getElementById("centerSE");
         submitButton.addEventListener("mousedown",submitClickHandler);
         submitButton.addEventListener("mouseup",submitCancelHandler);
@@ -674,7 +674,7 @@ var questions = [
 ];
 
 function initFAQQuestions() {
-    var faqClasses = ["faqEl left","faqEl right"];
+    var faqClasses = ["faqElLeft","faqElRight"];
     var curClass = 0;
     for (var i = 0; i < questions.length; i++) {
         var questionEle = document.createElement("p");
@@ -850,8 +850,8 @@ function init() {
     initDigLit();
     initSubmit();
     initFAQ();
-    setTimeout(endLoad, randInt(1000,2000));
-    // endLoad();
+    //setTimeout(endLoad, randInt(1000,2000));
+    endLoad();
 }
 
 window.onload = init;

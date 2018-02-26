@@ -137,6 +137,7 @@ main {
 
 section {
     width: 100%;
+    /*border-bottom: 2px solid black;*/
 }
 
 section.dark {
@@ -329,7 +330,6 @@ textarea {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
-    align-content: space-around;
     background-color: blue !important;
 }
 
@@ -482,32 +482,24 @@ textarea {
     padding-bottom: 60px;
 }
 
-.faqEl {
+.faqElLeft {
     display: flex;
     flex-direction: row;
+    justify-content: flex-start;
     padding: 20px 0;
     font-size: var(--body-text-size);
     font-weight: normal;
-    min-height: calc(6 * var(--body-text-size));
+    min-height: calc(5 * var(--body-text-size));
     position: relative;
     z-index: 1;
-}
-
-.faqEl.left {
-    justify-content: flex-start;
     padding-left: calc(3 * var(--subhead-text-size));
 }
 
-.faqEl.right {
-    justify-content: flex-end;
-    padding-right: calc(3 * var(--subhead-text-size));
-}
-
-.faqEl::after {
+.faqElLeft::after {
     content: "Q";
     position: absolute;
-    top: 0;
-    line-height: calc(3 * var(--subhead-text-size));
+    left: 0;
+    top: calc(-1 * var(--subhead-text-size));
 
     color: white;
     text-stroke: 1px black;
@@ -517,21 +509,64 @@ textarea {
     transition: content 0.3s;
 }
 
-.faqEl:hover::after {
+.faqElLeft:hover::after {
+    content: "A";
+    color: blue;
+}
+
+.faqElRight {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding: 20px 0;
+    font-size: var(--body-text-size);
+    font-weight: normal;
+    min-height: calc(5 * var(--body-text-size));
+    position: relative;
+    z-index: 1;
+    padding-right: calc(3 * var(--subhead-text-size));
+}
+
+.faqElRight::after {
+    content: "Q";
+    position: absolute;
+    right: 0;
+    top: calc(-1 * var(--subhead-text-size));
+
+    color: white;
+    text-stroke: 1px black;
+    -webkit-text-stroke: 1px black;
+    font-size: calc(3 * var(--subhead-text-size));
+    z-index: -1;
+    transition: color 0.3s;
+}
+
+.faqElRight:hover::after {
     content: "A";
     color: blue;
     transition: color 0.3s;
 }
 
-.faqEl.left::after {
-    left: 0;
+/******************************************************************************/
+/**************************** FOOTER ******************************************/
+/******************************************************************************/
+
+footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: calc(100%-120px);
+    height: 200px;
+    padding: 0 60px;
+
 }
 
-.faqEl.right::after {
-    right: 0;
-}
+footer p {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: grey;
+    font-size: var(--body-text-size);
 
-.faqElLeft:hover::after {
-    content: "A";
-    color: blue;
 }
