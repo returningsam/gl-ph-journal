@@ -489,7 +489,7 @@ textarea {
     padding: 20px 0;
     font-size: var(--body-text-size);
     font-weight: normal;
-    min-height: calc(5 * var(--body-text-size));
+    min-height: calc(6 * var(--body-text-size));
     position: relative;
     z-index: 1;
     padding-left: calc(3 * var(--subhead-text-size));
@@ -499,7 +499,8 @@ textarea {
     content: "Q";
     position: absolute;
     left: 0;
-    top: calc(-1 * var(--subhead-text-size));
+    top: 0;
+    line-height: calc(3 * var(--subhead-text-size));
 
     color: white;
     text-stroke: 1px black;
@@ -521,7 +522,7 @@ textarea {
     padding: 20px 0;
     font-size: var(--body-text-size);
     font-weight: normal;
-    min-height: calc(5 * var(--body-text-size));
+    min-height: calc(6 * var(--body-text-size));
     position: relative;
     z-index: 1;
     padding-right: calc(3 * var(--subhead-text-size));
@@ -531,7 +532,8 @@ textarea {
     content: "Q";
     position: absolute;
     right: 0;
-    top: calc(-1 * var(--subhead-text-size));
+    top: 0;
+    line-height: calc(3 * var(--subhead-text-size));
 
     color: white;
     text-stroke: 1px black;
