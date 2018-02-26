@@ -156,7 +156,7 @@ section.light {
     font-size: var(--subhead-text-size);
 }
 
-.sec_title p {
+.sec_title h2 {
     -ms-transform:     skew(0,-0deg);
     -moz-transform:    skew(0,-0deg);
     -webkit-transform: skew(0,-0deg);
@@ -466,6 +466,14 @@ textarea {
     flex-direction: column;
 }
 
-.faq_sec p {
-    margin-bottom: 20px;
+.faqEl {
+    margin-top: -1px;
+    padding: 20px 0;
+    border-bottom: 1px solid lightgrey;
+    transition: border 0.3s, height 0.2s;
+}
+
+.faqEl:hover {
+    border-bottom: 1px solid black;
+    transition: border 0.3s, height 0.2s;
 }
