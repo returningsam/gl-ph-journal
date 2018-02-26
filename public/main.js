@@ -661,9 +661,15 @@ function initSubmit() {
 /******************************************************************************/
 
 const FAQ_ANIM_STEP = 0.05;
-const FAQ_ANIM_STEP_TIME = 20;
+const FAQ_ANIM_STEP_TIME = 30;
 
 var questions = [
+    [["When ", "We "], "will ", ["you be open for ", "open our first "], "submission", ["s?", " window in March 2018"]],
+    [["I’m still not sure if my ", "You can submit your ideas and find out, or you can contact us in advance. The boundaries of what "], "work counts as digital literature", [". How do I know?", " are contested."]],
+    [["When ", "We "], "will ", ["you be open for ", "open our first "], "submission", ["s?", " window in March 2018"]],
+    [["I’m still not sure if my ", "You can submit your ideas and find out, or you can contact us in advance. The boundaries of what "], "work counts as digital literature", [". How do I know?", " are contested."]],
+    [["When ", "We "], "will ", ["you be open for ", "open our first "], "submission", ["s?", " window in March 2018"]],
+    [["I’m still not sure if my ", "You can submit your ideas and find out, or you can contact us in advance. The boundaries of what "], "work counts as digital literature", [". How do I know?", " are contested."]],
     [["When ", "We "], "will ", ["you be open for ", "open our first "], "submission", ["s?", " window in March 2018"]],
     [["I’m still not sure if my ", "You can submit your ideas and find out, or you can contact us in advance. The boundaries of what "], "work counts as digital literature", [". How do I know?", " are contested."]]
 ];
@@ -722,7 +728,6 @@ function retrieveQuestionText(qInd, qora, perc) {
 
 function showFAQQuestions(ev) {
     var qEl = ev.target;
-    qEl.style.cursor = "progress";
     var questions = qEl.id;
     var id = parseInt(questions.charAt(questions.length-1));
     showFAQQuestionsStep(qEl,id,0);
@@ -737,12 +742,10 @@ function showFAQQuestionsStep(qEl,id,perc) {
             showFAQQuestionsStep(qEl,id,perc);
         }, FAQ_ANIM_STEP_TIME);
     }
-    else qEl.style.cursor = null;
 }
 
 function showFAQAnswers(ev) {
     var qEl = ev.target;
-    qEl.style.cursor = "progress";
     var questions = qEl.id;
     var id = parseInt(questions.charAt(questions.length-1));
     showFAQAnswersStep(qEl,id,0);
@@ -757,7 +760,6 @@ function showFAQAnswersStep(qEl,id,perc) {
             showFAQAnswersStep(qEl,id,perc);
         }, FAQ_ANIM_STEP_TIME);
     }
-    else qEl.style.cursor = null;
 }
 
 function initFAQ() {

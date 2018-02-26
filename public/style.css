@@ -466,14 +466,40 @@ textarea {
     flex-direction: column;
 }
 
+#faq_title {
+    padding-bottom: 60px;
+}
+
 .faqEl {
-    margin-top: -1px;
     padding: 20px 0;
-    border-bottom: 1px solid lightgrey;
     transition: border 0.3s, height 0.2s;
+    font-size: var(--body-text-size);
+    font-weight: normal;
+    min-height: calc(5 * var(--body-text-size));
+    position: relative;
+    z-index: 1;
+    padding-left: calc(3 * var(--subhead-text-size));
 }
 
 .faqEl:hover {
-    border-bottom: 1px solid black;
     transition: border 0.3s, height 0.2s;
+}
+
+.faqEl::after {
+    content: "Q";
+    position: absolute;
+    left: 0;
+    top: calc(-1 * var(--subhead-text-size));
+
+    color: white;
+    text-stroke: 1px black;
+    -webkit-text-stroke: 1px black;
+    font-size: calc(3 * var(--subhead-text-size));
+    z-index: -1;
+    transition: content 0.3s;
+}
+
+.faqEl:hover::after {
+    content: "A";
+    color: blue;
 }
