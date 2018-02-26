@@ -472,7 +472,7 @@ function digLitAnimStep() {
 
         if (curDigAnimEl2 > -1) {
             var el = digLitAnimElements[curDigAnimEl2];
-            el.style.color = "black";
+            if (el) el.style.color = "black";
             startLetters.style = null;
             startLetters.className = "done";
         }
@@ -813,6 +813,7 @@ function endLoad() {
             document.getElementById('loading_overlay').style.display = "none";
             setTimeout(function () {
                 document.getElementById('title_sp').innerHTML = "&nbsp;";
+                document.getElementById('loading_overlay').parentNode.removeChild(document.getElementById('loading_overlay'));
             }, 1000);
         }, 1100);
     }, 200);

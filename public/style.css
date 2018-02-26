@@ -15,6 +15,7 @@ html, body {
     font-family: 'Roboto Mono', monospace;
     /* font-family: 'Inconsolata', monospace; */
     font-weight: 700;
+    overflow: hidden;
 }
 
 p {
@@ -137,6 +138,9 @@ main {
 
 section {
     width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
     /*border-bottom: 2px solid black;*/
 }
 
@@ -239,6 +243,16 @@ textarea {
     resize: none;
     flex-grow: 1;
 }
+
+textarea::placeholder {font-size: var(--body-text-size) !important;}
+/* Chrome/Opera/Safari */
+textarea::-webkit-input-placeholder {font-size: var(--body-text-size) !important;}
+/* Firefox 19+ */
+textarea::-moz-placeholder {font-size: var(--body-text-size) !important;}
+/* IE 10+ */
+textarea:-ms-input-placeholder {font-size: var(--body-text-size) !important;}
+/* Firefox 18- */
+textarea:-moz-placeholder {font-size: var(--body-text-size) !important;}
 
 .about_copy {
     display: none;
@@ -555,10 +569,11 @@ footer {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width: calc(100%-120px);
+    width: calc(100% - 120px);
     height: 150px;
+    margin: 0;
     padding: 0 60px;
-
+    overflow-x: hidden;
 }
 
 footer div {
