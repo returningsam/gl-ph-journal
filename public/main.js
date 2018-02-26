@@ -674,7 +674,7 @@ var questions = [
 ];
 
 function initFAQQuestions() {
-    var faqClasses = ["faqElLeft","faqElRight"];
+    var faqClasses = ["faqEl left","faqEl right"];
     var curClass = 0;
     for (var i = 0; i < questions.length; i++) {
         var questionEle = document.createElement("p");
