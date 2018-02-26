@@ -406,7 +406,6 @@ function initHomeSection() {
     homeSection = document.getElementById("home_sec");
     initHomeCanv();
     homeCanv.addEventListener("mousemove",homeCanvMouseMoveListener);
-    homeCanv.addEventListener("click",clearHomeCanv);
     resizeHandlers.push(initHomeCanv);
     startHomeDraw();
     setTimeout(function () {
@@ -675,14 +674,17 @@ var questions = [
 ];
 
 function initFAQQuestions() {
+    var faqClasses = ["faqElLeft","faqElRight"];
+    var curClass = 0;
     for (var i = 0; i < questions.length; i++) {
         var questionEle = document.createElement("p");
         questionEle.id = "question_" + i;
-        questionEle.className = "faqEl";
+        questionEle.className = faqClasses[curClass];
         questionEle.innerHTML = retrieveQuestionText(i, true, 1);
         questionEle.addEventListener("mouseover", showFAQAnswers);
         questionEle.addEventListener("mouseleave", showFAQQuestions);
         document.getElementById("faq_sec").appendChild(questionEle);
+        curClass = (curClass+1)%2;
     }
 
 }
