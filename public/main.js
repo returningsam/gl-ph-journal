@@ -850,8 +850,8 @@ function init() {
     initDigLit();
     initSubmit();
     initFAQ();
-    //setTimeout(endLoad, randInt(1000,2000));
-    endLoad();
+    setTimeout(endLoad, randInt(1000,2000));
+    // endLoad();
 }
 
 window.onload = init;
