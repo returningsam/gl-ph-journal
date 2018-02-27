@@ -438,7 +438,6 @@ function handleAboutTyping(ev) {
             if (len > 0 && lastAboutTextLen < len) len += randInt(0,aboutTypingNumExtra);
             aboutTypingNumExtra += randInt(0,1);
             lastAboutTextLen = len;
-            inp.value = null;
             inp.value = ABOUT_TEXT.slice(0,len);
             inp.style.cssText = 'height:auto; padding:0';
             inp.style.cssText = 'height:' + inp.scrollHeight + 'px';
