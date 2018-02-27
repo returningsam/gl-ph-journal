@@ -405,7 +405,7 @@ function initHomeSection() {
     curMainDrawEls = [];
     homeSection = document.getElementById("home_sec");
     initHomeCanv();
-    homeCanv.addEventListener("mousemove",homeCanvMouseMoveListener);
+    if (!isMobile) homeCanv.addEventListener("mousemove",homeCanvMouseMoveListener);
     resizeHandlers.push(initHomeCanv);
     startHomeDraw();
     setTimeout(function () {
@@ -426,7 +426,7 @@ var aboutTypingNumExtra = 1;
 function handleAboutTyping(ev) {
     var inp = document.getElementById("about_input");
     if (inp.value.length < ABOUT_TEXT.length || ev.key == "Backspace" || ev.metaKey || ev.ctrlKey) {
-        if (ev.key.length == 1) document.getElementById("aboutBGLetter").innerHTML = ev.key.toUpperCase();
+        if (ev.key.replace(/\s/g, '').length == 1) document.getElementById("aboutBGLetter").innerHTML = ev.key.toUpperCase();
         setTimeout(function () {
             var inp = document.getElementById("about_input");
             var len = inp.value.length;
