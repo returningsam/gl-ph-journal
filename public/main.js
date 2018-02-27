@@ -242,7 +242,12 @@ function fixSectionHeights() {
 
 function initSections() {
     document.getElementsByTagName("main")[0].addEventListener("scroll",sectionScrollHandler);
-    fixSectionHeights();
+    // fixSectionHeights();
+    initHomeSection();
+    initAboutSection();
+    initDigLitSection();
+    initSubmitSection();
+    initFAQSection();
 }
 
 /******************************************************************************/
@@ -442,7 +447,7 @@ function handleAboutTyping(ev) {
     }
 }
 
-function initAboutGLPH() {
+function initAboutSection() {
     var textAreaElement = document.getElementById("about_input");
     if (isMobile) {
         var container = textAreaElement.parentNode;
@@ -520,7 +525,7 @@ function startDigLitAnim() {
     }
 }
 
-function initDigLitAnim() {
+function initDigLitSectionAnim() {
     digLitOriginialContent = [];
     var digLitAnimSections = document.getElementsByClassName("digLitAnimSection");
     for (var i = 0; i < digLitAnimSections.length; i++) {
@@ -538,8 +543,8 @@ function initDigLitAnim() {
     }
 }
 
-function initDigLit() {
-    initDigLitAnim();
+function initDigLitSection() {
+    initDigLitSectionAnim();
     document.getElementById("digLitStartText").addEventListener("click",startDigLitAnim);
 }
 
@@ -632,7 +637,7 @@ function openSubmitLink() {
     }, 300);
 }
 
-function initSubmitElements() {
+function initSubmitSectionElements() {
     for (var i = 0; i < numSubmitElements; i++) {
         var elID = i+1;
         var submitElement = document.createElement("p");
@@ -652,11 +657,11 @@ function initSubmitElements() {
     }
 }
 
-function initSubmit() {
+function initSubmitSection() {
     if (!isMobile) {
         document.getElementById("submit_sec").classList.remove("mobile");
         document.getElementById("submit_sec").innerHTML = null;
-        initSubmitElements();
+        initSubmitSectionElements();
         submitButton = document.getElementById("centerSE");
         submitButton.addEventListener("mousedown",submitClickHandler);
         submitButton.addEventListener("mouseup",submitCancelHandler);
@@ -675,13 +680,9 @@ var questions = [
     [["I’m still not sure if my ", "You can submit your ideas and find out, or you can contact us in advance. The boundaries of what "], "work counts as digital literature", [". How do I know?", " are contested."]],
     [["When ", "We "], "will ", ["you be open for ", "open our first "], "submission", ["s?", " window in March 2018"]],
     [["I’m still not sure if my ", "You can submit your ideas and find out, or you can contact us in advance. The boundaries of what "], "work counts as digital literature", [". How do I know?", " are contested."]],
-    [["When ", "We "], "will ", ["you be open for ", "open our first "], "submission", ["s?", " window in March 2018"]],
-    [["I’m still not sure if my ", "You can submit your ideas and find out, or you can contact us in advance. The boundaries of what "], "work counts as digital literature", [". How do I know?", " are contested."]],
-    [["When ", "We "], "will ", ["you be open for ", "open our first "], "submission", ["s?", " window in March 2018"]],
-    [["I’m still not sure if my ", "You can submit your ideas and find out, or you can contact us in advance. The boundaries of what "], "work counts as digital literature", [". How do I know?", " are contested."]]
 ];
 
-function initFAQQuestions() {
+function initFAQSectionQuestions() {
     var faqClasses = ["faqEl left","faqEl right"];
     var curClass = 0;
     for (var i = 0; i < questions.length; i++) {
@@ -772,8 +773,8 @@ function showFAQAnswersStep(qEl,id,perc) {
     }
 }
 
-function initFAQ() {
-    initFAQQuestions();
+function initFAQSection() {
+    initFAQSectionQuestions();
     var questionOne = document.getElementById('question_1');
 }
 
@@ -854,11 +855,6 @@ function init() {
     grainOverlay.init();
     initMenu();
     initSections();
-    initHomeSection();
-    initAboutGLPH();
-    initDigLit();
-    initSubmit();
-    initFAQ();
     setTimeout(endLoad, randInt(1000,2000));
     // endLoad();
 }

@@ -137,11 +137,11 @@ main {
 }
 
 section {
-    width: 100%;
     height: auto;
     flex-grow: 1;
     margin: 0;
-    padding: 0;
+    width: calc(100% - 120px);
+    padding: 0 60px;
     overflow-x: hidden;
     /* overflow-y: visible; */
     /*border-bottom: 2px solid black;*/
@@ -178,6 +178,7 @@ section.light {
     position: relative;
     padding: 0;
     overflow: hidden;
+    width: 100%;
 }
 
 .home_sec canvas {
@@ -208,9 +209,6 @@ section.light {
 /******************************************************************************/
 
 .about_sec {
-    width: calc(100% - 120px);
-    height: auto;
-    padding: 0 60px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -299,8 +297,6 @@ textarea:-moz-placeholder {font-size: var(--body-text-size) !important;}
 /******************************************************************************/
 
 .dig_lit_sec {
-    width: calc(100% - 120px);
-    padding: 0 60px;
     display: flex;
     flex-direction: column;
     padding-bottom: 60px;
@@ -359,6 +355,8 @@ textarea:-moz-placeholder {font-size: var(--body-text-size) !important;}
     flex-wrap: wrap;
     justify-content: space-around;
     background-color: blue !important;
+    width: 100%;
+    padding: 0;
 }
 
 .submit_sec.mobile {
@@ -500,8 +498,6 @@ textarea:-moz-placeholder {font-size: var(--body-text-size) !important;}
 /******************************************************************************/
 
 .faq_sec {
-    width: calc(100% - 120px);
-    padding: 0 60px;
     display: flex;
     flex-direction: column;
 }
@@ -566,7 +562,7 @@ footer {
     flex-direction: row;
     justify-content: space-between;
     width: calc(100% - 120px);
-    height: 150px;
+    height: 100px;
     margin: 0;
     padding: 0 60px;
     overflow-x: hidden;
@@ -589,4 +585,8 @@ footer p {
 
 footer a {
     color: grey;
+}
+
+footer a:hover {
+    text-decoration-style: wavy;
 }
