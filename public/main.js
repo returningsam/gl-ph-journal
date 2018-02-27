@@ -443,8 +443,16 @@ function handleAboutTyping(ev) {
 }
 
 function initAboutGLPH() {
-    document.getElementById("about_input").value = "";
-    document.getElementById("about_input").addEventListener("keydown",handleAboutTyping);
+    var textAreaElement = document.getElementById("about_input");
+    if (isMobile) {
+        var container = textAreaElement.parentNode;
+        container.removeChild(textAreaElement);
+        container.innerHTML = "<p>" + ABOUT_TEXT.split("\n").join("</p><p>") + "</p>";
+    }
+    else {
+        document.getElementById("about_input").value = null;
+        document.getElementById("about_input").addEventListener("keydown",handleAboutTyping);
+    }
 }
 
 /******************************************************************************/
@@ -659,8 +667,8 @@ function initSubmit() {
 /******************************* FAQ SECTION **********************************/
 /******************************************************************************/
 
-const FAQ_ANIM_STEP = 0.05;
-const FAQ_ANIM_STEP_TIME = 30;
+const FAQ_ANIM_STEP = 0.2;
+const FAQ_ANIM_STEP_TIME = 50;
 
 var questions = [
     [["When ", "We "], "will ", ["you be open for ", "open our first "], "submission", ["s?", " window in March 2018"]],
@@ -674,7 +682,7 @@ var questions = [
 ];
 
 function initFAQQuestions() {
-    var faqClasses = ["faqElLeft","faqElRight"];
+    var faqClasses = ["faqEl left","faqEl right"];
     var curClass = 0;
     for (var i = 0; i < questions.length; i++) {
         var questionEle = document.createElement("p");
@@ -707,9 +715,9 @@ function retrieveQuestionText(qInd, qora, perc) {
             var tokLen;
             if (shownText.length > hiddenText.length)
                 tokLen = hiddenText.length + ((shownText.length - hiddenText.length)*perc);
-            else {
+            else
                 tokLen = hiddenText.length - ((hiddenText.length - shownText.length)*perc);
-            }
+
             tokLen = Math.round(tokLen);
             for (var i = 0; i < tokLen; i++) {
                 if (chance.bool({likelihood: perc*100})) {
