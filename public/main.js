@@ -430,10 +430,6 @@ var aboutTypingNumExtra = 1;
 
 function handleAboutTyping(ev) {
     var inp = this;
-    setTimeout(function () {
-        inp.style.cssText = 'height:auto; padding:0';
-        inp.style.cssText = 'height:' + inp.scrollHeight + 'px';
-    }, 1);
     if (inp.value.length < ABOUT_TEXT.length || ev.key == "Backspace" || ev.metaKey || ev.ctrlKey) {
         if (ev.key.replace(/\s/g, '').length == 1) document.getElementById("aboutBGLetter").innerHTML = ev.key.toUpperCase();
         setTimeout(function () {
@@ -444,6 +440,8 @@ function handleAboutTyping(ev) {
             lastAboutTextLen = len;
             inp.value = null;
             inp.value = ABOUT_TEXT.slice(0,len);
+            inp.style.cssText = 'height:auto; padding:0';
+            inp.style.cssText = 'height:' + inp.scrollHeight + 'px';
         }, 100);
     }
     else {
