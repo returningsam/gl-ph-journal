@@ -1,7 +1,7 @@
 :root {
-    --menu-text-size: calc(1.5vw + 3vh);
-    --subhead-text-size: calc(2vw + 2vh);
-    --body-text-size: calc(1vw + 1vh);
+    --menu-text-size: calc(1.5vmax + 3vmin);
+    --subhead-text-size: calc(2vmax + 2vmin);
+    --body-text-size: calc(1vmax + 1vmin);
     --max-body-size: 800px;
 }
 
