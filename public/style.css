@@ -138,10 +138,12 @@ main {
 
 section {
     width: 100%;
+    height: auto;
+    flex-grow: 1;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
-    overflow-y: visible;
+    /* overflow-y: visible; */
     /*border-bottom: 2px solid black;*/
 }
 
@@ -207,10 +209,11 @@ section.light {
 
 .about_sec {
     width: calc(100% - 120px);
+    height: auto;
     padding: 0 60px;
     display: flex;
     flex-direction: column;
-    position: relative;
+    overflow: visible;
 }
 
 #about_sec_title {
@@ -262,12 +265,12 @@ textarea:-moz-placeholder {font-size: var(--body-text-size) !important;}
 }
 
 #aboutBGLetter {
-    position: absolute;
+    position: fixed;
     right: -10vmax;
-    top: 10vmax;
+    top: 0;
     color: rgba(0,0,0,0);
     text-stroke: 1px black;
-    -webkit-text-stroke: 1px black;
+    -webkit-text-stroke: 0.1vmax black;
     font-size: 70vw;
     z-index: -1;
     padding: 0;
