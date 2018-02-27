@@ -235,14 +235,14 @@ function fixSectionHeights() {
     for (var i = 0; i < sections.length; i++) {
         if (sections[i].classList.contains("home_sec"))
             sections[i].style.minHeight = window.innerHeight + "px";
-        else sections[i].style.minHeight = sectionHeight + "px";
+        else if (!sections[i].classList.contains("about_sec")) sections[i].style.minHeight = sectionHeight + "px";
         // sections[i].style.height    = sectionHeight + "px";
     }
 }
 
 function initSections() {
     document.getElementsByTagName("main")[0].addEventListener("scroll",sectionScrollHandler);
-    // fixSectionHeights();
+    fixSectionHeights();
     initHomeSection();
     initAboutSection();
     initDigLitSection();
@@ -429,15 +429,20 @@ var lastAboutTextLen = 0;
 var aboutTypingNumExtra = 1;
 
 function handleAboutTyping(ev) {
-    var inp = document.getElementById("about_input");
+    var inp = this;
+    setTimeout(function () {
+        inp.style.cssText = 'height:auto; padding:0';
+        inp.style.cssText = 'height:' + inp.scrollHeight + 'px';
+    }, 1);
     if (inp.value.length < ABOUT_TEXT.length || ev.key == "Backspace" || ev.metaKey || ev.ctrlKey) {
         if (ev.key.replace(/\s/g, '').length == 1) document.getElementById("aboutBGLetter").innerHTML = ev.key.toUpperCase();
         setTimeout(function () {
             var inp = document.getElementById("about_input");
-            var len = inp.value.length;
+            var len = Math.min(ABOUT_TEXT.length,inp.value.length);
             if (len > 0 && lastAboutTextLen < len) len += randInt(0,aboutTypingNumExtra);
             aboutTypingNumExtra += randInt(0,1);
             lastAboutTextLen = len;
+            inp.value = null;
             inp.value = ABOUT_TEXT.slice(0,len);
         }, 100);
     }
@@ -456,7 +461,7 @@ function initAboutSection() {
     }
     else {
         document.getElementById("about_input").value = null;
-        document.getElementById("about_input").addEventListener("keydown",handleAboutTyping);
+        document.getElementById("about_input").addEventListener("keypress",handleAboutTyping);
     }
 }
 
@@ -682,6 +687,8 @@ var questions = [
     [["I’m still not sure if my ", "You can submit your ideas and find out, or you can contact us in advance. The boundaries of what "], "work counts as digital literature", [". How do I know?", " are contested."]],
 ];
 
+var faqElStates = {};
+
 function initFAQSectionQuestions() {
     var faqClasses = ["faqEl left","faqEl right"];
     var curClass = 0;
@@ -690,7 +697,7 @@ function initFAQSectionQuestions() {
         questionEle.id = "question_" + i;
         questionEle.className = faqClasses[curClass];
         questionEle.innerHTML = retrieveQuestionText(i, true, 1);
-        questionEle.addEventListener("mouseover", showFAQAnswers);
+        questionEle.addEventListener("mouseenter", showFAQAnswers);
         questionEle.addEventListener("mouseleave", showFAQQuestions);
         document.getElementById("faq_sec").appendChild(questionEle);
         curClass = (curClass+1)%2;
@@ -698,84 +705,71 @@ function initFAQSectionQuestions() {
 
 }
 
-function retrieveQuestionText(qInd, qora, perc) {
+function retrieveQuestionText(qInd) {
     var finalStr = "";
     for (var j = 0; j < questions[qInd].length; j++) {
         if (Array.isArray(questions[qInd][j])) {
-            var shownText;
-            var hiddenText;
-            if (qora == true) {
-                shownText  = questions[qInd][j][0];
-                hiddenText = questions[qInd][j][1];
-            }
-            else {
-                shownText  = questions[qInd][j][1];
-                hiddenText = questions[qInd][j][0];
-            }
+            // console.log(faqElStates[qInd].cur);
+            var perc  = faqElStates[qInd].cur;
+            var qText = questions[qInd][j][0];
+            var aText = questions[qInd][j][1];
+            var tokLen = Math.round(qText.length + ((aText.length - qText.length)*perc));
 
-            var tokLen;
-            if (shownText.length > hiddenText.length)
-                tokLen = hiddenText.length + ((shownText.length - hiddenText.length)*perc);
-            else
-                tokLen = hiddenText.length - ((hiddenText.length - shownText.length)*perc);
+            // if (j == 0) console.log(shownText, tokLen, perc);
 
-            tokLen = Math.round(tokLen);
             for (var i = 0; i < tokLen; i++) {
                 if (chance.bool({likelihood: perc*100})) {
-                    if (i < shownText.length) finalStr += shownText[i];
-                    else finalStr += randChar();
+                    if (i < aText.length) finalStr += aText[i];
+                    else finalStr += chance.character({alpha: true});
                 }
                 else {
-                    if (i < hiddenText.length) finalStr += hiddenText[i];
-                    else finalStr += randChar();
+                    if (i < qText.length) finalStr += qText[i];
+                    else finalStr += chance.character({alpha: true});
                 }
             }
         }
-        else
-            finalStr += questions[qInd][j];
+        else finalStr += questions[qInd][j];
     }
     return finalStr;
+}
+
+function faqAnimStep(qEl,id) {
+    var dir = 1;
+    if (faqElStates[id].targ < faqElStates[id].cur) dir = -1;
+    faqElStates[id].cur += (dir * FAQ_ANIM_STEP);
+    qEl.innerHTML = retrieveQuestionText(id);
+    if (faqElStates[id].cur.toFixed(2) != faqElStates[id].targ.toFixed(2)) {
+        setTimeout(function () {
+            faqAnimStep(qEl,id);
+        }, FAQ_ANIM_STEP_TIME);
+    }
+    else faqElStates[id].anim = false;
 }
 
 function showFAQQuestions(ev) {
     var qEl = ev.target;
     var questions = qEl.id;
     var id = parseInt(questions.charAt(questions.length-1));
-    showFAQQuestionsStep(qEl,id,0);
-}
-
-function showFAQQuestionsStep(qEl,id,perc) {
-    perc += FAQ_ANIM_STEP;
-    qEl.innerHTML = retrieveQuestionText(id, true, perc);
-    perc = parseFloat(perc.toFixed(2));
-    if (perc < 1) {
-        setTimeout(function () {
-            showFAQQuestionsStep(qEl,id,perc);
-        }, FAQ_ANIM_STEP_TIME);
-    }
+    faqElStates[id].targ = 0;
+    if (faqElStates[id].anim) return;
+    faqElStates[id].anim = true;
+    faqAnimStep(qEl,id);
 }
 
 function showFAQAnswers(ev) {
     var qEl = ev.target;
     var questions = qEl.id;
     var id = parseInt(questions.charAt(questions.length-1));
-    showFAQAnswersStep(qEl,id,0);
-}
-
-function showFAQAnswersStep(qEl,id,perc) {
-    perc += FAQ_ANIM_STEP;
-    qEl.innerHTML = retrieveQuestionText(id, false, perc);
-    perc = parseFloat(perc.toFixed(2));
-    if (perc < 1) {
-        setTimeout(function () {
-            showFAQAnswersStep(qEl,id,perc);
-        }, FAQ_ANIM_STEP_TIME);
-    }
+    faqElStates[id].targ = 1;
+    if (faqElStates[id].anim) return;
+    faqElStates[id].anim = true;
+    faqAnimStep(qEl,id,0);
 }
 
 function initFAQSection() {
+    for (var i = 0; i < questions.length; i++)
+        faqElStates[i] = {cur: 0,targ: 0,anim: false};
     initFAQSectionQuestions();
-    var questionOne = document.getElementById('question_1');
 }
 
 
@@ -855,8 +849,8 @@ function init() {
     grainOverlay.init();
     initMenu();
     initSections();
-    setTimeout(endLoad, randInt(1000,2000));
-    // endLoad();
+    // setTimeout(endLoad, randInt(1000,2000));
+    endLoad();
 }
 
 window.onload = init;

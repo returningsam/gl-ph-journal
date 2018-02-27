@@ -247,13 +247,14 @@ textarea {
     padding: 0;
     width: 100%;
     height: auto;
-    min-height: 100%;
+    /* min-height: 100%; */
     font-size: var(--body-text-size);
     border: none;
     background-color: rgba(0,0,0,0);
     font-family: 'Roboto Mono', monospace;
     resize: none;
     flex-grow: 1;
+    overflow: hidden;
 }
 
 textarea::placeholder {font-size: var(--body-text-size) !important;}
@@ -278,7 +279,7 @@ textarea:-moz-placeholder {font-size: var(--body-text-size) !important;}
     top: 0;
     color: rgba(0,0,0,0);
     text-stroke: 1px black;
-    -webkit-text-stroke: 0.1vmax black;
+    -webkit-text-stroke: 1px black;
     font-size: 70vw;
     line-height: 70vw;
     z-index: -1;
@@ -531,12 +532,13 @@ textarea:-moz-placeholder {font-size: var(--body-text-size) !important;}
 .faqEl::after {
     content: "Q";
     position: absolute;
-    top: calc(-1 * var(--subhead-text-size));
+    top: 0;
 
     color: white;
     text-stroke: 1px black;
     -webkit-text-stroke: 1px black;
     font-size: calc(3 * var(--subhead-text-size));
+    line-height: calc(3 * var(--subhead-text-size));
     z-index: -1;
     transition: content 0.3s;
 }
