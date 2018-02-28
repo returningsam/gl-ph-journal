@@ -674,26 +674,38 @@ function initSubmitSection() {
 /******************************* FAQ SECTION **********************************/
 /******************************************************************************/
 
-const FAQ_ANIM_STEP = 0.2;
-const FAQ_ANIM_STEP_TIME = 50;
+const FAQ_ANIM_STEP = 0.1;
+const FAQ_ANIM_STEP_TIME = 20;
 
 var questions = [
-    [["When ", "We "], "will ", ["you be open for ", "open our first "], "submission", ["s?", " window in March 2018"]],
     [["I’m still not sure if my ", "You can submit your ideas and find out, or you can contact us in advance. The boundaries of what "], "work counts as digital literature", [". How do I know?", " are contested."]],
     [["When ", "We "], "will ", ["you be open for ", "open our first "], "submission", ["s?", " window in March 2018"]],
     [["I’m still not sure if my ", "You can submit your ideas and find out, or you can contact us in advance. The boundaries of what "], "work counts as digital literature", [". How do I know?", " are contested."]],
+    [["When ", "We "], "will ", ["you be open for ", "open our first "], "submission", ["s?", " window in March 2018"]],
 ];
 
 var faqElStates = {};
 
 function initFAQSectionQuestions() {
-    var faqClasses = ["faqEl left","faqEl right"];
+    var faqClasses = ["faqEl left","faqEl left"];
     var curClass = 0;
     for (var i = 0; i < questions.length; i++) {
-        var questionEle = document.createElement("p");
+        var questionEle = document.createElement("div");
         questionEle.id = "question_" + i;
         questionEle.className = faqClasses[curClass];
-        questionEle.innerHTML = retrieveQuestionText(i, true, 1);
+
+        var qElAccent = document.createElement("p");
+        qElAccent.className = "accent";
+        qElAccent.id = "questionaccent_" + i;
+        qElAccent.innerHTML = "Q";
+
+        var qElText = document.createElement("p");
+        qElText.id = "questiontext_" + i;
+        qElText.innerHTML = retrieveQuestionText(i, true, 1);
+
+        questionEle.appendChild(qElAccent);
+        questionEle.appendChild(qElText);
+
         questionEle.addEventListener("mouseenter", showFAQAnswers);
         questionEle.addEventListener("mouseleave", showFAQQuestions);
         document.getElementById("faq_sec").appendChild(questionEle);
@@ -734,7 +746,7 @@ function faqAnimStep(qEl,id) {
     var dir = 1;
     if (faqElStates[id].targ < faqElStates[id].cur) dir = -1;
     faqElStates[id].cur += (dir * FAQ_ANIM_STEP);
-    qEl.innerHTML = retrieveQuestionText(id);
+    document.getElementById("questiontext_" + id).innerHTML = retrieveQuestionText(id);
     if (faqElStates[id].cur.toFixed(2) != faqElStates[id].targ.toFixed(2)) {
         setTimeout(function () {
             faqAnimStep(qEl,id);
@@ -747,6 +759,7 @@ function showFAQQuestions(ev) {
     var qEl = ev.target;
     var questions = qEl.id;
     var id = parseInt(questions.charAt(questions.length-1));
+    document.getElementById("questionaccent_" + id).innerHTML = "Q";
     faqElStates[id].targ = 0;
     if (faqElStates[id].anim) return;
     faqElStates[id].anim = true;
@@ -757,6 +770,7 @@ function showFAQAnswers(ev) {
     var qEl = ev.target;
     var questions = qEl.id;
     var id = parseInt(questions.charAt(questions.length-1));
+    document.getElementById("questionaccent_" + id).innerHTML = "A";
     faqElStates[id].targ = 1;
     if (faqElStates[id].anim) return;
     faqElStates[id].anim = true;
