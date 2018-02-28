@@ -855,13 +855,12 @@ function resize() {
 /******************************************************************************/
 
 function init() {
-    isMobile = chechIfMobile();
     startLoad();
+    isMobile = chechIfMobile();
     grainOverlay.init();
     initMenu();
     initSections();
-    // setTimeout(endLoad, randInt(1000,2000));
-    endLoad();
+    setTimeout(endLoad, randInt(1000,2000));
 }
 
 window.onload = init;
