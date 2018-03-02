@@ -257,8 +257,9 @@ textarea {
     resize: none;
     flex-grow: 1;
     overflow: hidden;
-    /* border-radius: 10px; */
-    /* padding: 20px; */
+    /* border-radius: 10px;
+    padding: 20px;
+    border: 1px solid black; */
     background-color: rgba(255,255,255,0);
     z-index: 0;
 }
@@ -590,6 +591,8 @@ footer div {
 footer p {
     font-weight: normal;
     margin-bottom: 20px;
+    opacity: 1;
+    transition: opacity 0.5s;
 }
 
 footer a {
@@ -598,4 +601,18 @@ footer a {
 
 footer a:hover {
     text-decoration-style: wavy;
+}
+
+footer span {
+    text-decoration: underline;
+}
+
+footer span:hover {
+    text-decoration-style: wavy;
+    cursor: pointer;
+}
+
+.teamlist {
+    display: none;
+    opacity: 0;
 }

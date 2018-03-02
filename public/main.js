@@ -226,6 +226,7 @@ function sectionScrollHandler(ev) {
     setTimeout(function () {
         scrolling = false;
     }, 10);
+    hideFooterTeam();
 }
 
 function fixSectionHeights() {
@@ -235,14 +236,17 @@ function fixSectionHeights() {
     for (var i = 0; i < sections.length; i++) {
         if (sections[i].classList.contains("home_sec"))
             sections[i].style.minHeight = window.innerHeight + "px";
-        else if (!sections[i].classList.contains("about_sec")) sections[i].style.minHeight = sectionHeight + "px";
-        // sections[i].style.height    = sectionHeight + "px";
+        else if (!sections[i].classList.contains("about_sec") &&
+                 !sections[i].classList.contains("faq_sec") &&
+                 !sections[i].classList.contains("dig_lit_sec"))
+            sections[i].style.minHeight = sectionHeight + "px";
     }
 }
 
 function initSections() {
     document.getElementsByTagName("main")[0].addEventListener("scroll",sectionScrollHandler);
     fixSectionHeights();
+    resizeHandlers.push(fixSectionHeights);
     initHomeSection();
     initAboutSection();
     initDigLitSection();
@@ -433,7 +437,6 @@ function handleAboutTyping(ev) {
     if (inp.value.length < ABOUT_TEXT.length || ev.key == "Backspace" || ev.metaKey || ev.ctrlKey) {
         if (ev.key.replace(/\s/g, '').length == 1) document.getElementById("aboutBGLetter").innerHTML = ev.key.toUpperCase();
         setTimeout(function () {
-            var inp = document.getElementById("about_input");
             var len = Math.min(ABOUT_TEXT.length,inp.value.length);
             if (len > 0 && lastAboutTextLen < len) len += randInt(0,aboutTypingNumExtra);
             aboutTypingNumExtra += randInt(0,1);
@@ -449,6 +452,32 @@ function handleAboutTyping(ev) {
     }
 }
 
+var aboutAnimText = "You already know! Type away!";
+var aboutAnimProg = 0;
+var aboutAnimTimeout;
+var doAboutAnim = true;
+
+function startAboutTypeAnim() {
+    aboutAnimTimeout = setTimeout(aboutTypeAnimStep, randInt(100,700));
+}
+
+function aboutTypeAnimStep() {
+    if (!doAboutAnim) return;
+    aboutAnimProg++;
+    var inp = document.getElementById("about_input");
+    if (aboutAnimProg > aboutAnimText.length) {
+        aboutAnimProg = 0;
+        inp.select();
+        setTimeout(function () {
+            aboutAnimTimeout = setTimeout(aboutTypeAnimStep, randInt(100,700));
+        }, randInt(1000,2000));
+    }
+    else {
+        inp.value = aboutAnimText.slice(0, aboutAnimProg);
+        aboutAnimTimeout = setTimeout(aboutTypeAnimStep, randInt(50,500));
+    }
+}
+
 function initAboutSection() {
     var textAreaElement = document.getElementById("about_input");
     if (isMobile) {
@@ -457,8 +486,13 @@ function initAboutSection() {
         container.innerHTML = "<p>" + ABOUT_TEXT.split("\n").join("</p><p>") + "</p>";
     }
     else {
-        document.getElementById("about_input").value = null;
-        document.getElementById("about_input").addEventListener("keypress",handleAboutTyping);
+        startAboutTypeAnim();
+        textAreaElement.addEventListener("click", function () {
+            doAboutAnim = false;
+            document.getElementById("about_input").value = null;
+            document.getElementById("about_input").placeholder = aboutAnimText;
+            document.getElementById("about_input").addEventListener("keypress",handleAboutTyping);
+        });
     }
 }
 
@@ -783,6 +817,38 @@ function initFAQSection() {
     initFAQSectionQuestions();
 }
 
+/******************************************************************************/
+/******************************* FOOTER ***************************************/
+/******************************************************************************/
+
+// footertext
+// teamlist
+
+function showFooterTeam() {
+    document.getElementById("footertext").style.opacity = 0;
+    setTimeout(function () {
+        document.getElementById("footertext").style.display = "none";
+        document.getElementById("teamlist").style.display = "flex";
+        setTimeout(function () {
+            document.getElementById("teamlist").style.opacity = 1;
+        }, 50);
+    }, 500);
+}
+
+function hideFooterTeam() {
+    document.getElementById("teamlist").style.opacity = 0;
+    setTimeout(function () {
+        document.getElementById("teamlist").style.display = "none";
+        document.getElementById("footertext").style.display = null;
+        setTimeout(function () {
+            document.getElementById("footertext").style.opacity = null;
+        }, 50);
+    }, 500);
+}
+
+function initFooter() {
+    document.getElementById("footerTeamButton").addEventListener("click",showFooterTeam);
+}
 
 /******************************************************************************/
 /******************************* LOADING **************************************/
@@ -860,6 +926,7 @@ function init() {
     grainOverlay.init();
     initMenu();
     initSections();
+    initFooter();
     setTimeout(endLoad, randInt(1000,2000));
 }
 
