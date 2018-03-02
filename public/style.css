@@ -510,6 +510,7 @@ textarea:-moz-placeholder {font-size: var(--body-text-size) !important;}
     flex-direction: column;
     height: auto;
     flex-grow: 1;
+    cursor: help;
 }
 
 #faq_title {
