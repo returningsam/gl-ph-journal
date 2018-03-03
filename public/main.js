@@ -9,6 +9,7 @@ var updateScroll = true;
 var sectionHeight;
 
 var isMobile;
+var isChrome;
 
 /******************************************************************************/
 /******************************* HELPERS **************************************/
@@ -210,7 +211,7 @@ function sectionScrollHandler(ev) {
         lastScrollTop = this.scrollTop;
     }
 
-    if (!isMobile) {
+    if (!isMobile && !isChrome) {
         curTitleSkew = Math.max(-MAX_TITLE_SKEW,Math.min(MAX_TITLE_SKEW,curTitleSkew+(scrollDiff/30)));
         if (!updateTitleSkewsInterval)
             updateTitleSkewsInterval = setInterval(updateTitleSkews, 10);
@@ -428,9 +429,16 @@ function initHomeSection() {
 
 const ABOUT_TEXT = "This organization is one of the first undergraduate-run literary journals in the nation (if not the first) dedicated exclusively to the publication of digital literature (otherwise known as electronic literature, or e-lit). It is directed and housed by the Rochester Institute of Technology (RIT).\n\nWhy \"gl-ph\"?\n\nWikipedia says that a glyph is “a hieroglyphic character or symbol; a pictograph.” We say that it’s the interface between text and icon, between code and image. In our name, the hyphen, in a way, is a wild card, the space inside square brackets, a space to inhabit in fluid and dynamic ways.";
 
+var textAreaElement;
+
 var nextAboutTextInd = 0;
 var lastAboutTextLen = 0;
 var aboutTypingNumExtra = 1;
+
+var aboutAnimText = "You already know! Type away!";
+var aboutAnimProg = 0;
+var aboutAnimTimeout;
+var doAboutAnim = true;
 
 function handleAboutTyping(ev) {
     var inp = this;
@@ -452,13 +460,21 @@ function handleAboutTyping(ev) {
     }
 }
 
-var aboutAnimText = "You already know! Type away!";
-var aboutAnimProg = 0;
-var aboutAnimTimeout;
-var doAboutAnim = true;
-
 function startAboutTypeAnim() {
     aboutAnimTimeout = setTimeout(aboutTypeAnimStep, randInt(100,700));
+}
+
+function stopAboutTypeAnim(ev) {
+    textAreaElement.removeEventListener("click",stopAboutTypeAnim);
+    textAreaElement.removeEventListener("keypress",preventType);
+    doAboutAnim = false;
+    textAreaElement.value = null;
+    textAreaElement.placeholder = aboutAnimText;
+    textAreaElement.addEventListener("keypress",handleAboutTyping);
+}
+
+function preventType(ev) {
+    ev.preventDefault();
 }
 
 function aboutTypeAnimStep() {
@@ -479,7 +495,7 @@ function aboutTypeAnimStep() {
 }
 
 function initAboutSection() {
-    var textAreaElement = document.getElementById("about_input");
+    textAreaElement = document.getElementById("about_input");
     if (isMobile) {
         var container = textAreaElement.parentNode;
         container.removeChild(textAreaElement);
@@ -487,12 +503,8 @@ function initAboutSection() {
     }
     else {
         startAboutTypeAnim();
-        textAreaElement.addEventListener("click", function () {
-            doAboutAnim = false;
-            document.getElementById("about_input").value = null;
-            document.getElementById("about_input").placeholder = aboutAnimText;
-            document.getElementById("about_input").addEventListener("keypress",handleAboutTyping);
-        });
+        textAreaElement.addEventListener("click", stopAboutTypeAnim);
+        textAreaElement.addEventListener("keypress", preventType);
     }
 }
 
@@ -923,6 +935,7 @@ function resize() {
 function init() {
     startLoad();
     isMobile = chechIfMobile();
+    isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
     grainOverlay.init();
     initMenu();
     initSections();
