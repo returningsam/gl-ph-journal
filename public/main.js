@@ -211,7 +211,7 @@ function sectionScrollHandler(ev) {
         lastScrollTop = this.scrollTop;
     }
 
-    if (!isMobile && !isChrome) {
+    if (!isMobile || !isChrome) {
         curTitleSkew = Math.max(-MAX_TITLE_SKEW,Math.min(MAX_TITLE_SKEW,curTitleSkew+(scrollDiff/30)));
         if (!updateTitleSkewsInterval)
             updateTitleSkewsInterval = setInterval(updateTitleSkews, 10);
