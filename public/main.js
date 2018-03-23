@@ -736,7 +736,7 @@ var questions = [
     [["When will y", "We’re looking to release "], "our first issue", [" come out?", " (Issue 00 - Source)  during the summer of 2018."]],
     [["Who can submit ", "Anyone and everyone. We’re looking for "], "work ", ["to gl-ph?", "from undergraduates, graduate students, educators, and any/all artists/writers/creators working with digital literature. "]],
     [["Do you have any ", "Here are some "], "works of digital literature that", [" you ", " we "], "particularly love", ["?",": <a href='https://samkilg.us'>link</a>"]],
-    // [["I want to","You can"]," keep track of what gl-ph is up to",[". How can I tune in?"," by following us on facebook, instagram, and twitter!"]]
+    [["I want to","You can"]," keep track of what gl-ph is up to",[". How can I tune in?"," by following us on <a href='#'>facebook</a>, <a href='#'>instagram</a>, and <a href='#'>twitter</a>."]]
 ];
 
 var faqElStates = {};
