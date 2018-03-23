@@ -737,7 +737,7 @@ var questions = [
     [["When are ", "We’re looking at the first 100 "], "submissions", [" due?", ", on a rolling basis. The sooner you submit, the more likely your work will be featured!"]],
     [["Who can submit ", "Anyone and everyone. We’re looking for "], "work ", ["to gl-ph?", "from undergraduates, graduate students, educators, and any/all artists/writers/creators working with digital literature. "]],
     [["Do you have any ", "Here are some "], "works of digital literature that", [" you ", " we "], "particularly love", ["?",": <a href='https://samkilg.us'>link</a>"]],
-    [["I want to","You can"]," keep track of what gl-ph is up to",[". How can I tune in?"," by following us on <a href='#'>facebook</a>, <a href='#'>instagram</a>, and <a href='#'>twitter</a>."]]
+    // [["I want to","You can"]," keep track of what gl-ph is up to",[". How can I tune in?"," by following us on <a href='#'>facebook</a>, <a href='#'>instagram</a>, and <a href='#'>twitter</a>."]]
 ];
 
 var faqElStates = {};
