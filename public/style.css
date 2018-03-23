@@ -544,7 +544,7 @@ textarea:-moz-placeholder {font-size: var(--body-text-size) !important;}
 
 .faqEl a:hover {
     color: black;
-    text-decoration-style: wavy;
+    text-decoration-style: dotted;
 }
 
 .faqEl.left {
