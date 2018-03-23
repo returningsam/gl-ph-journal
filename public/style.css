@@ -528,8 +528,14 @@ textarea:-moz-placeholder {font-size: var(--body-text-size) !important;}
     display: flex;
     padding-bottom: 20px;
     min-height: calc(5 * var(--body-text-size));
+    max-height: calc(5 * var(--body-text-size));
     z-index: 1;
-    /* width: 100%; */
+    transition: max-height 1s;
+    overflow: hidden;
+}
+
+.faqEl:hover {
+    max-height: calc(15 * var(--body-text-size));
 }
 
 .faqEl p {

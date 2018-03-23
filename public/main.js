@@ -755,7 +755,7 @@ var questions = [
     [["When will y", "We’re looking to release "], "our first issue", [" come out?", " (Issue 00 - Source)  during the summer of 2018."]],
     [["When are ", "We’re looking at the first 100 "], "submissions", [" due?", ", on a rolling basis. The sooner you submit, the more likely your work will be featured!"]],
     [["Who can submit ", "Anyone and everyone. We’re looking for "], "work ", ["to gl-ph?", "from undergraduates, graduate students, educators, and any/all artists/writers/creators working with digital literature. "]],
-    [["Do you have any ", "Here are some "], "works of digital literature that", [" you ", " we "], "particularly love", ["?",": <a href='https://samkilg.us'>link</a>"]],
+    [["What ", "Here "], "are some examples of digital literature that reflect what", [" you’re ", " we're "], " looking for in a submission", ["?",": <a href='http://luckysoap.com/ethericocean/'>Etheric Ocean by J.R. Carpenter</a>, <a href='http://www.altx.com/thebody/'>my body & a Wunderkammer by Shelley Jackson</a>"]],
     // [["I want to","You can"]," keep track of what gl-ph is up to",[". How can I tune in?"," by following us on <a href='#'>facebook</a>, <a href='#'>instagram</a>, and <a href='#'>twitter</a>."]]
 ];
 
@@ -794,7 +794,7 @@ function retrieveQuestionText(qInd) {
     for (var j = 0; j < questions[qInd].length; j++) {
         if (Array.isArray(questions[qInd][j])) {
             // console.log(faqElStates[qInd].cur);
-            var perc  = faqElStates[qInd].cur;
+            var perc  = Math.max(0,Math.min(1,faqElStates[qInd].cur));
             var qText = questions[qInd][j][0];
             var aText = questions[qInd][j][1];
             var tokLen = Math.round(qText.length + ((aText.length - qText.length)*perc));
