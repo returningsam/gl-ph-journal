@@ -538,6 +538,15 @@ textarea:-moz-placeholder {font-size: var(--body-text-size) !important;}
     font-weight: normal;
 }
 
+.faqEl a {
+    color: black;
+}
+
+.faqEl a:hover {
+    color: black;
+    text-decoration-style: wavy;
+}
+
 .faqEl.left {
     flex-direction: row;
     justify-content: flex-start;
@@ -601,6 +610,7 @@ footer p {
     margin-bottom: 20px;
     opacity: 1;
     transition: opacity 0.5s;
+    overflow: visible;
 }
 
 footer a {

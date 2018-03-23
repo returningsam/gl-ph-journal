@@ -211,7 +211,7 @@ function sectionScrollHandler(ev) {
         lastScrollTop = this.scrollTop;
     }
 
-    if (!isMobile || !isChrome) {
+    if (!isMobile && !isChrome) {
         curTitleSkew = Math.max(-MAX_TITLE_SKEW,Math.min(MAX_TITLE_SKEW,curTitleSkew+(scrollDiff/30)));
         if (!updateTitleSkewsInterval)
             updateTitleSkewsInterval = setInterval(updateTitleSkews, 10);
@@ -427,7 +427,7 @@ function initHomeSection() {
 /******************************* ABOUT GL-PH SECTION **************************/
 /******************************************************************************/
 
-const ABOUT_TEXT = "This organization is one of the first undergraduate-run literary journals in the nation (if not the first) dedicated exclusively to the publication of digital literature (otherwise known as electronic literature, or e-lit). It is directed and housed by the Rochester Institute of Technology (RIT).\n\nWhy \"gl-ph\"?\n\nWikipedia says that a glyph is “a hieroglyphic character or symbol; a pictograph.” We say that it’s the interface between text and icon, between code and image. In our name, the hyphen, in a way, is a wild card, the space inside square brackets, a space to inhabit in fluid and dynamic ways.";
+const ABOUT_TEXT = "Directed by undergraduates at the Rochester Institute of Technology (RIT), gl-ph is one of the first undergraduate literary journals in the nation dedicated exclusively to the publication of digital literature (otherwise known as electronic literature, or e-lit).\n\nWhy are we called gl-ph?\n\nWikipedia defines a glyph as “a hieroglyphic character or symbol; a pictograph.” We say that it’s the interface between text and icon, between code and image. The hyphen is a wild card, a parameter-driven space inside square brackets, an opening to inhabit in fluid and dynamic ways.";
 
 var textAreaElement;
 
@@ -600,6 +600,7 @@ function initDigLitSection() {
 /******************************* SUBMIT SECTION *******************************/
 /******************************************************************************/
 
+const SUBMIT_URL = "https://signatures.submittable.com/submit/24396/digital-electronic-literature";
 const SUBMIT_ANIM_STEP_TIME = 200;
 
 var numSubmitElements = 25;
@@ -680,7 +681,12 @@ function openSubmitLink() {
             setTimeout(function () {
                 submitCancelHandler();
             }, 10);
-            window.open("https://goo.gl/images/iK3BZK","_blank");
+            var link = document.createElement("a");
+            link.style.display = "none";
+            link.href = SUBMIT_URL;
+            document.body.appendChild(link);
+            link.click();
+            delete link
         }, 300);
     }, 300);
 }
@@ -724,10 +730,12 @@ const FAQ_ANIM_STEP = 0.1;
 const FAQ_ANIM_STEP_TIME = 20;
 
 var questions = [
-    [["I’m still not sure if my ", "You can submit your ideas and find out, or you can contact us in advance. The boundaries of what "], "work counts as digital literature", [". How do I know?", " are contested."]],
-    [["When ", "We "], "will ", ["you be open for ", "open our first "], "submission", ["s?", " window in March 2018"]],
-    [["I’m still not sure if my ", "You can submit your ideas and find out, or you can contact us in advance. The boundaries of what "], "work counts as digital literature", [". How do I know?", " are contested."]],
-    [["When ", "We "], "will ", ["you be open for ", "open our first "], "submission", ["s?", " window in March 2018"]],
+    [["When will you be ", "We are "], "open for submissions", ["?", " right now, submit your work using the link above!"]],
+    [["How do I know if my work counts as ", "We take a pretty broad view about what constitutes "], "digital literature", ["?", ". You can submit your work and find out, or you can contact us in advance."]],
+    [["When will y", "We’re looking to release "], "our first issue", [" come out?", " (Issue 00 - Source)  during the summer of 2018."]],
+    [["Who can submit ", "Anyone and everyone. We’re looking for "], "work ", ["to gl-ph?", "from undergraduates, graduate students, educators, and any/all artists/writers/creators working with digital literature. "]],
+    [["Do you have any ", "Here are some "], "works of digital literature that", [" you ", " we "], "particularly love", ["?",": <a href='https://samkilg.us'>link</a>"]],
+    // [["I want to","You can"]," keep track of what gl-ph is up to",[". How can I tune in?"," by following us on facebook, instagram, and twitter!"]]
 ];
 
 var faqElStates = {};
@@ -940,7 +948,7 @@ function init() {
     initMenu();
     initSections();
     initFooter();
-    setTimeout(endLoad, randInt(1000,2000));
+    setTimeout(endLoad, randInt(300,700));
 }
 
 window.onload = init;
