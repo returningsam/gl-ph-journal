@@ -626,7 +626,7 @@ footer span {
 }
 
 footer span:hover {
-    text-decoration-style: wavy;
+    text-decoration-style: dotted;
     cursor: pointer;
 }
 
