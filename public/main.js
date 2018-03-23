@@ -646,15 +646,35 @@ function updateMiddleSE(color,stroke,func) {
     }
 }
 
-function submitStageStep() {
+function submitStageStep(forward) {
     submitButton.classList.remove("stage" + curSubmitStage);
-    curSubmitStage++;
+    if (forward) curSubmitStage++;
     submitButton.classList.add("stage" + curSubmitStage);
+
     updateOuterSE(SUBMIT_ANIM_STAGES[curSubmitStage][0],SUBMIT_ANIM_STAGES[curSubmitStage][1]);
     updateMiddleSE(SUBMIT_ANIM_STAGES[curSubmitStage][2],SUBMIT_ANIM_STAGES[curSubmitStage][3]);
-    if (curSubmitStage+1 == SUBMIT_ANIM_STAGES.length)
-        submitAnimTimeout = setTimeout(openSubmitLink, SUBMIT_ANIM_STEP_TIME);
-    else submitAnimTimeout = setTimeout(submitStageStep, SUBMIT_ANIM_STEP_TIME);
+    if (forward) {
+        if (curSubmitStage+1 >= SUBMIT_ANIM_STAGES.length)
+            submitAnimTimeout = setTimeout(openSubmitLink, SUBMIT_ANIM_STEP_TIME);
+        else submitAnimTimeout = setTimeout(function () {
+            submitStageStep(true);
+        }, SUBMIT_ANIM_STEP_TIME);
+    }
+    else {
+        if (curSubmitStage-1 < 0) {
+            submitAnimTimeout = setTimeout(function () {
+                updateOuterSE( "blue","blue");
+                updateMiddleSE("blue","blue");
+                setTimeout(function () {submitButton.innerHTML = "SUBMIT";}, 300);
+                submitButton.className = "submitElement centerSE";
+                clearTimeout(submitAnimTimeout);
+            }, SUBMIT_ANIM_STEP_TIME);
+        }
+        else submitAnimTimeout = setTimeout(function () {
+            submitStageStep(false);
+        }, SUBMIT_ANIM_STEP_TIME);
+    }
+    if (!forward)  curSubmitStage--;
 }
 
 function submitClickHandler() {
@@ -663,15 +683,14 @@ function submitClickHandler() {
     submitButton.classList.add("stage" + curSubmitStage);
     updateOuterSE(SUBMIT_ANIM_STAGES[curSubmitStage][0],SUBMIT_ANIM_STAGES[curSubmitStage][1]);
     updateMiddleSE(SUBMIT_ANIM_STAGES[curSubmitStage][2],SUBMIT_ANIM_STAGES[curSubmitStage][3]);
-    submitAnimTimeout = setTimeout(submitStageStep, SUBMIT_ANIM_STEP_TIME);
+    submitAnimTimeout = setTimeout(function () {
+        submitStageStep(true)
+    }, SUBMIT_ANIM_STEP_TIME);
 }
 
 function submitCancelHandler() {
-    updateOuterSE( "blue","blue");
-    updateMiddleSE("blue","blue");
-    submitButton.innerHTML = "SUBMIT";
-    submitButton.className = "submitElement centerSE";
     clearTimeout(submitAnimTimeout);
+    submitStageStep(false);
 }
 
 function openSubmitLink() {
