@@ -618,7 +618,7 @@ footer a {
 }
 
 footer a:hover {
-    text-decoration-style: wavy;
+    text-decoration-style: dotted;
 }
 
 footer span {
