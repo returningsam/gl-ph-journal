@@ -441,7 +441,7 @@ var aboutAnimTimeout;
 var doAboutAnim = true;
 
 function handleAboutTyping(ev) {
-    var inp = this;
+    var inp = ev.target;
     if (inp.value.length < ABOUT_TEXT.length || ev.key == "Backspace" || ev.metaKey || ev.ctrlKey) {
         if (ev.key.replace(/\s/g, '').length == 1) document.getElementById("aboutBGLetter").innerHTML = ev.key.toUpperCase();
         setTimeout(function () {
@@ -466,11 +466,12 @@ function startAboutTypeAnim() {
 
 function stopAboutTypeAnim(ev) {
     textAreaElement.removeEventListener("click",stopAboutTypeAnim);
-    textAreaElement.removeEventListener("keypress",preventType);
+    textAreaElement.removeEventListener("keypress",stopAboutTypeAnim);
     doAboutAnim = false;
     textAreaElement.value = null;
     textAreaElement.placeholder = aboutAnimText;
     textAreaElement.addEventListener("keypress",handleAboutTyping);
+    if (ev.key) handleAboutTyping(ev);
 }
 
 function preventType(ev) {
@@ -504,7 +505,7 @@ function initAboutSection() {
     else {
         startAboutTypeAnim();
         textAreaElement.addEventListener("click", stopAboutTypeAnim);
-        textAreaElement.addEventListener("keypress", preventType);
+        textAreaElement.addEventListener("keypress", stopAboutTypeAnim);
     }
 }
 
@@ -881,13 +882,6 @@ var loadChs = "\\|/-".split("");
 var curLoadCh = 0;
 
 function loadStep() {
-    // var loadEl = document.getElementById('title_sp');
-    // var nextChar = randInt(0,loadChs.length-1);
-    // while (nextChar == loadChs.indexOf(loadEl.innerHTML))
-    //     nextChar = randInt(0,loadChs.length-1);
-    // loadEl.innerHTML = loadChs[nextChar];
-    // loadEl.innerHTML = randChar();
-
     var loadEl = document.getElementById('title_sp');
     loadEl.innerHTML = loadChs[curLoadCh];
     curLoadCh++;
