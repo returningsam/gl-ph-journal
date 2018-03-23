@@ -734,6 +734,7 @@ var questions = [
     [["When will you be ", "We are "], "open for submissions", ["?", " right now, submit your work using the link above!"]],
     [["How do I know if my work counts as ", "We take a pretty broad view about what constitutes "], "digital literature", ["?", ". You can submit your work and find out, or you can contact us in advance."]],
     [["When will y", "We’re looking to release "], "our first issue", [" come out?", " (Issue 00 - Source)  during the summer of 2018."]],
+    [["When are ", "We’re looking at the first 94 "], "submissions", [" due?", ", on a rolling basis. The sooner you submit, the more likely your work will be featured!"]],
     [["Who can submit ", "Anyone and everyone. We’re looking for "], "work ", ["to gl-ph?", "from undergraduates, graduate students, educators, and any/all artists/writers/creators working with digital literature. "]],
     [["Do you have any ", "Here are some "], "works of digital literature that", [" you ", " we "], "particularly love", ["?",": <a href='https://samkilg.us'>link</a>"]],
     [["I want to","You can"]," keep track of what gl-ph is up to",[". How can I tune in?"," by following us on <a href='#'>facebook</a>, <a href='#'>instagram</a>, and <a href='#'>twitter</a>."]]
