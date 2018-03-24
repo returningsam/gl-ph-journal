@@ -530,7 +530,7 @@ textarea:-moz-placeholder {font-size: var(--body-text-size) !important;}
     min-height: calc(5 * var(--body-text-size));
     max-height: calc(5 * var(--body-text-size));
     z-index: 1;
-    transition: max-height 1s;
+    transition: max-height 1s 0.5s;
     overflow: hidden;
 }
 
