@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "gl-ph-a275f"
+    "default": "gl-ph-a275f",
+    "staging": "test-611fd"
   }
 }

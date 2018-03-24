@@ -180,6 +180,7 @@ section.light {
     padding: 0;
     overflow: hidden;
     width: 100%;
+    z-index: 2;
 }
 
 .home_sec canvas {
@@ -216,7 +217,7 @@ section.light {
     flex-direction: column;
     overflow: hidden;
     overflow-y: visible;
-    z-index: 0;
+    z-index: 1;
 }
 
 #about_sec_title {
@@ -308,6 +309,7 @@ textarea:-moz-placeholder {font-size: var(--body-text-size) !important;}
     display: flex;
     flex-direction: column;
     padding-bottom: 60px;
+    z-index: 1;
 }
 
 .digLitAnimSection {
@@ -365,6 +367,7 @@ textarea:-moz-placeholder {font-size: var(--body-text-size) !important;}
     background-color: blue !important;
     width: 100%;
     padding: 0;
+    z-index: 2;
 }
 
 .submit_sec.mobile {
@@ -518,6 +521,7 @@ textarea:-moz-placeholder {font-size: var(--body-text-size) !important;}
     height: auto;
     flex-grow: 1;
     cursor: help;
+    z-index: 2;
 }
 
 #faq_title {
@@ -530,12 +534,13 @@ textarea:-moz-placeholder {font-size: var(--body-text-size) !important;}
     min-height: calc(5 * var(--body-text-size));
     max-height: calc(5 * var(--body-text-size));
     z-index: 1;
-    transition: max-height 1s 0.5s;
+    /* transition: max-height 0; */
     overflow: hidden;
 }
 
-.faqEl:hover {
+.faqEl.expanded {
     max-height: calc(15 * var(--body-text-size));
+    transition: max-height 1s 0.3s;
 }
 
 .faqEl p {
@@ -599,7 +604,7 @@ footer {
     padding: 0 60px;
     overflow-x: hidden;
     background-color: white;
-    z-index: 1;
+    z-index: 2;
 }
 
 footer div {

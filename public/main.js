@@ -105,15 +105,6 @@ function menuButtonClickHandler(ev) {
 function updateTitleColors() {
     var maxDist = 200;
     var colorStep = 1;
-    // UNCOMMENT TO FADE TITLE ON HOVER
-    // for (var i = 0; i < 4; i++) {
-    //     var titleCh = document.getElementById("title_ch_" + i);
-    //     var elX = titleCh.offsetLeft + (titleCh.clientWidth/2);
-    //     var elY = titleCh.offsetTop  + (titleCh.clientHeight/2);
-    //     var dist = getDist(mouseX,mouseY,elX,elY);
-    //     titleCh.style.opacity = ((dist / maxDist)-0.2).toFixed(2);
-    // }
-    // ////////////////////////////////
     for (var i = 0; i < sectIDs.length; i++) {
         var buttonCh = document.getElementById(sectIDs[i] + "_mb");
         var elX = buttonCh.offsetLeft + (buttonCh.clientWidth/2);
@@ -130,7 +121,8 @@ function initMenu() {
     menuCharWidth = document.getElementById("home_mb").clientWidth;
     updateAllMenuButtons();
     for (var i = 0; i < sectIDs.length; i++) {
-        document.getElementById(sectIDs[i] + "_mb").addEventListener("click",menuButtonClickHandler);
+        var button = document.getElementById(sectIDs[i] + "_mb");
+        button.addEventListener("click",menuButtonClickHandler);
     }
     resizeHandlers.push(updateAllMenuButtons);
 }
@@ -781,8 +773,14 @@ function initFAQSectionQuestions() {
         questionEle.appendChild(qElAccent);
         questionEle.appendChild(qElText);
 
-        questionEle.addEventListener("mouseenter", showFAQAnswers);
-        questionEle.addEventListener("mouseleave", showFAQQuestions);
+        if (isMobile) {
+            questionEle.addEventListener("click", showFAQAnswers);
+            questionEle.addEventListener("mouseleave", showFAQQuestions);
+        }
+        else {
+            questionEle.addEventListener("mouseenter", showFAQAnswers);
+            questionEle.addEventListener("mouseleave", showFAQQuestions);
+        }
         document.getElementById("faq_sec").appendChild(questionEle);
         curClass = (curClass+1)%2;
     }
@@ -793,13 +791,10 @@ function retrieveQuestionText(qInd) {
     var finalStr = "";
     for (var j = 0; j < questions[qInd].length; j++) {
         if (Array.isArray(questions[qInd][j])) {
-            // console.log(faqElStates[qInd].cur);
             var perc  = Math.max(0,Math.min(1,faqElStates[qInd].cur));
             var qText = questions[qInd][j][0];
             var aText = questions[qInd][j][1];
             var tokLen = Math.round(qText.length + ((aText.length - qText.length)*perc));
-
-            // if (j == 0) console.log(shownText, tokLen, perc);
 
             for (var i = 0; i < tokLen; i++) {
                 if (chance.bool({likelihood: perc*100})) {
@@ -832,6 +827,7 @@ function faqAnimStep(qEl,id) {
 
 function showFAQQuestions(ev) {
     var qEl = ev.target;
+    qEl.classList.remove("expanded");
     var questions = qEl.id;
     var id = parseInt(questions.charAt(questions.length-1));
     document.getElementById("questionaccent_" + id).innerHTML = "Q";
@@ -843,6 +839,7 @@ function showFAQQuestions(ev) {
 
 function showFAQAnswers(ev) {
     var qEl = ev.target;
+    qEl.classList.add("expanded");
     var questions = qEl.id;
     var id = parseInt(questions.charAt(questions.length-1));
     document.getElementById("questionaccent_" + id).innerHTML = "A";
