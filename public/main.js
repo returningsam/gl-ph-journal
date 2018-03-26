@@ -748,7 +748,7 @@ var questions = [
     [["When are ", "We’re looking at the first 100 "], "submissions", [" due?", ", on a rolling basis. The sooner you submit, the more likely your work will be featured!"]],
     [["Who can submit ", "Anyone and everyone. We’re looking for "], "work ", ["to gl-ph?", "from undergraduates, graduate students, educators, and any/all artists/writers/creators working with digital literature. "]],
     [["What ", "Here "], "are some examples of digital literature that reflect what", [" you’re ", " we're "], " looking for in a submission", ["?",": <a href='http://luckysoap.com/ethericocean/'>Etheric Ocean by J.R. Carpenter</a>, <a href='http://www.altx.com/thebody/'>my body & a Wunderkammer by Shelley Jackson</a>"]],
-    // [["I want to","You can"]," keep track of what gl-ph is up to",[". How can I tune in?"," by following us on <a href='#'>facebook</a>, <a href='#'>instagram</a>, and <a href='#'>twitter</a>."]]
+    [["I want to","You can"]," keep track of what gl-ph is up to",[". How can I tune in?"," by following us on <a href='https://fb.me/gl.ph.team'>facebook</a> and <a href='https://www.instagram.com/gl__ph/'>instagram</a>."]]
 ];
 
 var faqElStates = {};
